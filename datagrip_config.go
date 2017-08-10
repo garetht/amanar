@@ -1,10 +1,8 @@
 package main
 
-import (
-	"github.com/beevik/etree"
-	"fmt"
-)
+import "github.com/beevik/etree"
 
+// Tested with DataGrip 2017.2
 func NewDatagripConfig(document []byte) (*DatagripConfig, error) {
 	d := etree.NewDocument()
 	err := d.ReadFromBytes(document)
@@ -30,8 +28,9 @@ func (dc *DatagripConfig) UpdateUsername(databaseUuid, newUsername string) {
 	for _, dataSource := range component.SelectElements("data-source") {
 		if uuid := dataSource.SelectAttrValue("uuid", ""); uuid == databaseUuid {
 
-			for _, attr := range dataSource.Attr {
-				fmt.Printf("  ATTR: %s=%s\n", attr.Key, attr.Value)
+			username := dataSource.SelectElement("user-name")
+			if username != nil {
+				username.SetText(newUsername)
 			}
 		}
 	}
