@@ -45,11 +45,12 @@ func (vc *VaultGithubAuthClient) loginWithGithub() error {
 
 	c.SetToken(secret.Auth.ClientToken)
 	vc.vaultClient = c
+
 	return nil
 }
 
 func (vc *VaultGithubAuthClient) getCredential(vaultPath, vaultRole string) (*api.Secret, error) {
-	if vc.vaultClient.Token() == "" {
+	if vc.vaultClient == nil || vc.vaultClient.Token() == "" {
 		return nil, errors.New("Vault Github client has not yet been intialized with a token. Please log in.")
 	}
 
