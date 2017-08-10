@@ -1,5 +1,5 @@
 .idea
 *.iml
-Godeps/
+Godeps/_workspace
 main.go
 backup.xml

@@ -1,0 +1,119 @@
+{
+	"ImportPath": "github.com/garetht/amanar",
+	"GoVersion": "go1.8",
+	"Deps": [
+		{
+			"ImportPath": "github.com/beevik/etree",
+			"Rev": "15a30b44cfd6c5a16a7ddfe271bf146aaf2d3195"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/api",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/helper/compressutil",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/helper/jsonutil",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/helper/parseutil",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/fatih/structs",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/golang/snappy",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/hashicorp/errwrap",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/hashicorp/go-cleanhttp",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/hashicorp/go-multierror",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/hashicorp/go-rootcerts",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/hashicorp/hcl",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/mitchellh/go-homedir",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/mitchellh/mapstructure",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/github.com/sethgrid/pester",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/net/http2",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/net/idna",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/net/lex/httplex",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/text/secure/bidirule",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/text/transform",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/text/unicode/bidi",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/vault/vendor/golang.org/x/text/unicode/norm",
+			"Comment": "v0.8.0-8-gc1d69f8",
+			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
+		},
+		{
+			"ImportPath": "github.com/zalando/go-keyring",
+			"Rev": "af539a5cf72c7e4bc536e7b505afab78293ceb3c"
+		}
+	]
+}
