@@ -1,5 +1,4 @@
 .idea
 *.iml
 Godeps/_workspace
-main.go
 backup.xml
