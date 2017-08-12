@@ -1,10 +1,19 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
+	"fmt"
+	"encoding/json"
 )
 
 func main() {
+	if err != nil {
+		log.Fatal(err)
+	}
+	config := []AmanarConfigItem{}
+	json.Unmarshal(bytes, &config)
+	fmt.Printf("%#v", config)
 
 	/*	ghc := &VaultGithubAuthClient{
 			GithubToken: os.Getenv("GITHUB_TOKEN"),

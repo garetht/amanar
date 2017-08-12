@@ -18,7 +18,7 @@ type IntellijDatasource struct {
 	NewVaultSecret		 *api.Secret
 }
 
-func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijDatasourceConfig) (string, error) {
+func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijDatasourceFile) (string, error) {
 	// Updaters: updates to in-memory data. Should be done
 	// sequentially, but no IO is done.
 	oldUsername, err := datagripConfig.UpdateUsername(ds.DatabaseUUID, ds.NewVaultSecret)
@@ -30,7 +30,7 @@ func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijData
 	return oldUsername, nil
 }
 
-func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceConfig) (err error) {
+func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (err error) {
 	// Writing: side-effecting writes to files and forms of IO and things.
 	// In this case, we write to the IntellJ config file and the OSX keychain
 	// Should be done sequentially.
@@ -66,7 +66,7 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceConfig)
 
 // A side effecting function that updates the
 func (ds *IntellijDatasource) UpdateCredentials() (err error) {
-	datagripConfig, err := NewIntellijDatasourceConfig(ds.DatasourceFilepath)
+	datagripConfig, err := NewIntellijDatasourceFile(ds.DatasourceFilepath)
 	if err != nil {
 		return
 	}

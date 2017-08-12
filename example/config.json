@@ -1,19 +1,19 @@
 [
     {
-        "vault_path": "",
-        "vault_role": "",
+        "vault_path": "db-tzanalytic",
+        "vault_role": "read-only",
         "configurations": {
             "intellij_datasources": [
                 {
-                    "datasource_path": "",
-                    "database_uuid": "",
+                    "datasource_file_path": "here/there",
+                    "database_uuid": "1234-32123",
                     "trusted_applications": []
                 }
             ],
             "intellij_run_configurations": [
                 {
-                    "run_configurations_folder": "",
-                    "environment_variable_key": ""
+                    "run_configurations_folder_path": "here/there",
+                    "environment_variable": "thing"
                 }
             ]
         }

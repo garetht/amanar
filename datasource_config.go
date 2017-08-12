@@ -7,7 +7,7 @@ import (
 )
 
 // Tested with DataGrip 2017.2
-func NewIntellijDatasourceConfig(filepath string) (*IntellijDatasourceConfig, error) {
+func NewIntellijDatasourceFile(filepath string) (*IntellijDatasourceFile, error) {
 	d := etree.NewDocument()
 	err := d.ReadFromFile(filepath)
 
@@ -15,25 +15,25 @@ func NewIntellijDatasourceConfig(filepath string) (*IntellijDatasourceConfig, er
 		return nil, err
 	}
 
-	dc := &IntellijDatasourceConfig{
+	dc := &IntellijDatasourceFile{
 		Document: d,
 	}
 
 	return dc, nil
 }
 
-// A IntellijDatasourceConfig is an XML document containing
+// A IntellijDatasourceFile is an XML document containing
 // This struct and methods allows updating of the username in
 // such a configuration.
 // DataGrip can store usernames in its configuration and passwords
 // in the Keyring, or it can store both a username and password
 // in a URL-like format in its config files. This updater assumes
 // that the former is the case.
-type IntellijDatasourceConfig struct {
+type IntellijDatasourceFile struct {
 	Document *etree.Document
 }
 
-func (dc *IntellijDatasourceConfig) UpdateUsername(databaseUuid string, secret *api.Secret) (oldUsername string, err error) {
+func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid string, secret *api.Secret) (oldUsername string, err error) {
 	newUsername, ok := secret.Data["username"].(string)
 
 	component := dc.Document.SelectElement("project").SelectElement("component")
