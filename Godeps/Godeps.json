@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/garetht/amanar",
-	"GoVersion": "go1.8",
+	"GoVersion": "go1.8.3",
 	"Deps": [
 		{
 			"ImportPath": "github.com/beevik/etree",
@@ -112,8 +112,8 @@
 			"Rev": "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
 		},
 		{
-			"ImportPath": "github.com/zalando/go-keyring",
-			"Rev": "af539a5cf72c7e4bc536e7b505afab78293ceb3c"
+			"ImportPath": "github.com/keybase/go-keychain",
+			"Rev": "69c518e5bfff89ad62db81a185634d3aeac3c453"
 		}
 	]
 }

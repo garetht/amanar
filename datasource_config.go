@@ -7,7 +7,7 @@ import (
 )
 
 // Tested with DataGrip 2017.2
-func NewDatagripConfig(filepath string) (*DatagripConfig, error) {
+func NewIntellijDatasourceConfig(filepath string) (*IntellijDatasourceConfig, error) {
 	d := etree.NewDocument()
 	err := d.ReadFromFile(filepath)
 
@@ -15,25 +15,25 @@ func NewDatagripConfig(filepath string) (*DatagripConfig, error) {
 		return nil, err
 	}
 
-	dc := &DatagripConfig{
+	dc := &IntellijDatasourceConfig{
 		Document: d,
 	}
 
 	return dc, nil
 }
 
-// A DatagripConfig is an XML document containing
+// A IntellijDatasourceConfig is an XML document containing
 // This struct and methods allows updating of the username in
 // such a configuration.
 // DataGrip can store usernames in its configuration and passwords
 // in the Keyring, or it can store both a username and password
 // in a URL-like format in its config files. This updater assumes
 // that the former is the case.
-type DatagripConfig struct {
+type IntellijDatasourceConfig struct {
 	Document *etree.Document
 }
 
-func (dc *DatagripConfig) UpdateUsername(databaseUuid string, secret *api.Secret) (oldUsername string, err error) {
+func (dc *IntellijDatasourceConfig) UpdateUsername(databaseUuid string, secret *api.Secret) (oldUsername string, err error) {
 	newUsername, ok := secret.Data["username"].(string)
 
 	component := dc.Document.SelectElement("project").SelectElement("component")
@@ -41,6 +41,8 @@ func (dc *DatagripConfig) UpdateUsername(databaseUuid string, secret *api.Secret
 	for _, dataSource := range component.SelectElements("data-source") {
 		if uuid := dataSource.SelectAttrValue("uuid", ""); uuid == databaseUuid {
 
+			// This is in here because we count the update to have succeeded if the
+			// database UUID does not exist in the config file
 			if !ok {
 				return "", errors.New("Could not update database UUID %s because secret lacked a username.")
 			}

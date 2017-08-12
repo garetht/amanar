@@ -1,0 +1,21 @@
+[
+    {
+        "vault_path": "",
+        "vault_role": "",
+        "configurations": {
+            "intellij_datasources": [
+                {
+                    "datasource_path": "",
+                    "database_uuid": "",
+                    "trusted_applications": []
+                }
+            ],
+            "intellij_run_configurations": [
+                {
+                    "run_configurations_folder": "",
+                    "environment_variable_key": ""
+                }
+            ]
+        }
+    }
+]
