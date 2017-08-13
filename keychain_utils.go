@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/keybase/go-keychain"
-	"fmt"
 	"errors"
+	"fmt"
+	"log"
+
+	"github.com/keybase/go-keychain"
 )
 
 // Deletion poses problems because there does not seem to be a
@@ -31,8 +33,6 @@ func CreateOrUpdateKeychainEntriesForService(service, account, password string, 
 		return errors.New(fmt.Sprintf("[KEYCHAIN] Found more than one entry for the service %s. Please delete duplicates and try again.", service))
 	}
 
-	fmt.Printf("%#v", trustedApplications)
-
 	for _, result := range results {
 		originalItem := keychain.NewItem()
 		originalItem.SetSecClass(keychain.SecClassGenericPassword)
@@ -43,6 +43,10 @@ func CreateOrUpdateKeychainEntriesForService(service, account, password string, 
 		updateItem.SetAccount(account)
 		updateItem.SetData([]byte(password))
 		err = keychain.UpdateItem(originalItem, updateItem)
+
+		if err != nil {
+			log.Printf("[KEYCHAIN] Updating error %s", err)
+		}
 	}
 
 	// TODO: stop swallowing errors

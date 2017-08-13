@@ -1,0 +1,66 @@
+{
+  "items": {
+    "required": [
+      "configurables",
+      "vault_path",
+      "vault_role"
+    ],
+    "type": "object",
+    "properties": {
+      "vault_path": {
+        "type": "string"
+      },
+      "vault_role": {
+        "type": "string"
+      },
+      "configurables": {
+        "type": "object",
+        "properties": {
+          "intellij_datasources": {
+            "items": {
+              "required": [
+                "database_uuid",
+                "datasource_file_path"
+              ],
+              "type": "object",
+              "properties": {
+                "datasource_file_path": {
+                  "type": "string"
+                },
+                "trusted_applications": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "database_uuid": {
+                  "type": "string"
+                }
+              }
+            },
+            "type": "array"
+          },
+          "intellij_run_configurations": {
+            "items": {
+              "required": [
+                "environment_variable",
+                "run_configurations_folder_path"
+              ],
+              "type": "object",
+              "properties": {
+                "run_configurations_folder_path": {
+                  "type": "string"
+                },
+                "environment_variable": {
+                  "type": "string"
+                }
+              }
+            },
+            "type": "array"
+          }
+        }
+      }
+    }
+  },
+  "type": "array"
+}

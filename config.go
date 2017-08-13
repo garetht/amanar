@@ -3,7 +3,12 @@ package main
 import (
 	"github.com/hashicorp/vault/api"
 	"log"
+	"io/ioutil"
+	"github.com/xeipuuv/gojsonschema"
+	"encoding/json"
 )
+
+type AmanarConfiguration []AmanarConfigItem
 
 type AmanarConfigItem struct {
 	VaultPath     VaultPath           `json:"vault_path"`
@@ -44,6 +49,39 @@ func ProcessConfigItem(configurables *AmanarConfigurables, secret *api.Secret) {
 			log.Printf("[RUN CONFIGURATIONS CONFIG] Could not process run configurations config %#v because %s. Skipping ahead.", runConfigurationsConfig, err)
 		}
 	}
+	return
+}
+
+func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfiguration, err error, re []gojsonschema.ResultError) {
+	bytes, err := ioutil.ReadFile(configFilepath)
+	if err != nil {
+		return
+	}
+
+	schema, err := Asset(schemaAssetPath)
+	if err != nil {
+		return
+	}
+
+	documentLoader := gojsonschema.NewBytesLoader(bytes)
+	schemaLoader := gojsonschema.NewBytesLoader(schema)
+
+	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
+
+	if err != nil {
+		return
+	}
+
+	if !result.Valid() {
+		re = result.Errors()
+		return
+	}
+
+	err = json.Unmarshal(bytes, &c)
+	if err != nil {
+		return
+	}
+
 	return
 }
 

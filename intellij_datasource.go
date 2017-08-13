@@ -43,12 +43,12 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (
 
 	newUsername, ok := ds.NewVaultSecret.Data["username"].(string)
 	if !ok {
-		return errors.New("Could not parse username out of Vault secret response.")
+		return errors.New("[VAULT AUTH] Could not parse username out of Vault secret response.")
 	}
 
 	password, ok := ds.NewVaultSecret.Data["password"].(string)
 	if !ok {
-		return errors.New("Could not parse password out of Vault secret response.")
+		return errors.New("[VAULT AUTH] Could not parse password out of Vault secret response.")
 	}
 
 	err = config.Document.WriteToFile(string(ds.DatasourceFilepath))
@@ -63,8 +63,6 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (
 		log.Fatalf("[DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, newUsername, password)
 		return err
 	}
-
-	fmt.Println("Finished changing")
 
 	return
 }

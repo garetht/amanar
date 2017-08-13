@@ -2,28 +2,28 @@ package main
 
 import (
 	"log"
-	"io/ioutil"
 	"os"
-	"encoding/json"
 )
 
 func main() {
-	bytes, err := ioutil.ReadFile(os.Getenv("CONFIG_FILEPATH"))
+	configItems, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
+
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	configItems := []AmanarConfigItem{}
-	err = json.Unmarshal(bytes, &configItems)
-	if err != nil {
-		log.Fatal(err)
+	if resultErrors != nil {
+		log.Println("[CONFIG SCHEMA] The provided configuration JSON did not conform to the structure required by the JSON Schema.")
+		for _, resultErr := range resultErrors {
+			log.Printf("[CONFIG SCHEMA] At JSON location %s: %s", resultErr.Context().String(), resultErr.Description())
+		}
 		return
 	}
 
 	githubToken := os.Getenv("GITHUB_TOKEN")
 	if githubToken == "" {
-		log.Fatalln("Please provide a valid GitHub token as the environment variable GITHUB_TOKEN so we can fetch new credentials.")
+		log.Fatalln("[GITHUB AUTH] Please provide a valid GitHub token as the environment variable GITHUB_TOKEN so we can fetch new credentials.")
 		return
 	}
 
@@ -32,14 +32,14 @@ func main() {
 	}
 	err = ghc.loginWithGithub()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
 		return
 	}
 
 	for _, configItem := range configItems {
 		secret, err := ghc.getCredential(configItem.VaultPath, configItem.VaultRole)
 		if err != nil {
-			log.Printf("Could not retrieve credential for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
+			log.Printf("[VAULT AUTH] Could not retrieve credential for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
 		}
 		ProcessConfigItem(&configItem.Configurables, secret)
 	}
