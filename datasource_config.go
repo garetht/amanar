@@ -7,9 +7,9 @@ import (
 )
 
 // Tested with DataGrip 2017.2
-func NewIntellijDatasourceFile(filepath string) (*IntellijDatasourceFile, error) {
+func NewIntellijDatasourceFile(filepath IntellijDatasourceFilepath) (*IntellijDatasourceFile, error) {
 	d := etree.NewDocument()
-	err := d.ReadFromFile(filepath)
+	err := d.ReadFromFile(string(filepath))
 
 	if err != nil {
 		return nil, err
@@ -33,13 +33,13 @@ type IntellijDatasourceFile struct {
 	Document *etree.Document
 }
 
-func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid string, secret *api.Secret) (oldUsername string, err error) {
+func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, secret *api.Secret) (oldUsername string, err error) {
 	newUsername, ok := secret.Data["username"].(string)
 
 	component := dc.Document.SelectElement("project").SelectElement("component")
 
 	for _, dataSource := range component.SelectElements("data-source") {
-		if uuid := dataSource.SelectAttrValue("uuid", ""); uuid == databaseUuid {
+		if uuid := dataSource.SelectAttrValue("uuid", ""); IntellijDatabaseUUID(uuid) == databaseUuid {
 
 			// This is in here because we count the update to have succeeded if the
 			// database UUID does not exist in the config file

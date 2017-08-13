@@ -9,13 +9,17 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
+type IntellijDatabaseUUID string
+type IntellijDatasourceFilepath string
+
 // An IntellijDatasource knows how to update the username
 // and password for a single database with a particular IntelliJ UUID.
 // It does this by using dataSources.local.xml files.
 type IntellijDatasource struct {
-	DatabaseUUID       string
-	DatasourceFilepath string
-	NewVaultSecret		 *api.Secret
+	DatabaseUUID        IntellijDatabaseUUID
+	DatasourceFilepath  IntellijDatasourceFilepath
+	TrustedApplications []string
+	NewVaultSecret      *api.Secret
 }
 
 func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijDatasourceFile) (string, error) {
@@ -47,14 +51,15 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (
 		return errors.New("Could not parse password out of Vault secret response.")
 	}
 
-	err = config.Document.WriteToFile(ds.DatasourceFilepath)
+	err = config.Document.WriteToFile(string(ds.DatasourceFilepath))
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DATASOURCE %s] Writing new username %s and password %s to Keychain", service, newUsername, password)
-	err = CreateUniqueKeychainEntryForService(service, newUsername, password, []string{})
+	err = CreateOrUpdateKeychainEntriesForService(service, newUsername, password, ds.TrustedApplications)
 	if err != nil {
+		log.Print(err)
 		log.Fatalf("[DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, newUsername, password)
 		return err
 	}

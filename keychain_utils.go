@@ -1,43 +1,66 @@
 package main
 
-import "github.com/keybase/go-keychain"
+import (
+	"github.com/keybase/go-keychain"
+	"fmt"
+	"errors"
+)
 
-// Deletes all keychain entries that belong to Service
-func DeleteAllKeychainEntriesForService(service string) (err error) {
+// Deletion poses problems because there does not seem to be a
+// way to make deletion prompt for access, which means it will fail.
+// trustedApplications is only set when creating a new keychain entry.
+// Q: what happens when updating?
+func CreateOrUpdateKeychainEntriesForService(service, account, password string, trustedApplications []string) error {
 	item := keychain.NewItem()
 	item.SetSecClass(keychain.SecClassGenericPassword)
 	item.SetService(service)
+	item.SetMatchLimit(keychain.MatchLimitAll)
+	item.SetReturnAttributes(true)
 
-	for err != keychain.ErrorItemNotFound {
-		err = keychain.DeleteItem(item)
+	results, err := keychain.QueryItem(item)
+
+	if err != nil {
+		return err
 	}
 
-	if err == keychain.ErrorItemNotFound {
-		return nil
+	if len(results) == 0 {
+		return CreateKeychainEntryForService(service, account, password, trustedApplications)
 	}
-	return
+
+	if len(results) > 1 {
+		return errors.New(fmt.Sprintf("[KEYCHAIN] Found more than one entry for the service %s. Please delete duplicates and try again.", service))
+	}
+
+	fmt.Printf("%#v", trustedApplications)
+
+	for _, result := range results {
+		originalItem := keychain.NewItem()
+		originalItem.SetSecClass(keychain.SecClassGenericPassword)
+		originalItem.SetService(result.Service)
+		originalItem.SetAccount(result.Account)
+
+		updateItem := keychain.NewItem()
+		updateItem.SetAccount(account)
+		updateItem.SetData([]byte(password))
+		err = keychain.UpdateItem(originalItem, updateItem)
+	}
+
+	// TODO: stop swallowing errors
+	return err
 }
 
 // Creates a new keychain entry and
-func CreateUniqueKeychainEntryForService(service, account, password string, trustedApplications []string) error {
+func CreateKeychainEntryForService(service, account, password string, trustedApplications []string) error {
 	item := keychain.NewItem()
 	item.SetSecClass(keychain.SecClassGenericPassword)
 	item.SetService(service)
 	item.SetAccount(account)
 	item.SetLabel(service)
 
-	if len(trustedApplications) > 0 {
-		access := keychain.Access{
-			Label: "Amanar Trusted",
-			TrustedApplications: trustedApplications,
-		}
-		item.SetAccess(&access)
-	}
+	setTrustedApplications(trustedApplications, &item)
 
 	item.SetData([]byte(password))
 
-	// Remove all earlier entries for the service
-	DeleteAllKeychainEntriesForService(service)
 	err := keychain.AddItem(item)
 
 	if err != nil {
@@ -45,4 +68,13 @@ func CreateUniqueKeychainEntryForService(service, account, password string, trus
 	}
 
 	return nil
+}
+func setTrustedApplications(trustedApplications []string, item *keychain.Item) {
+	if len(trustedApplications) > 0 {
+		access := keychain.Access{
+			Label:               "Amanar Keychain Entries",
+			TrustedApplications: trustedApplications,
+		}
+		item.SetAccess(&access)
+	}
 }
