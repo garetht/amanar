@@ -3,8 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
-
 	"github.com/keybase/go-keychain"
 )
 
@@ -42,14 +40,11 @@ func CreateOrUpdateKeychainEntriesForService(service, account, password string, 
 		updateItem := keychain.NewItem()
 		updateItem.SetAccount(account)
 		updateItem.SetData([]byte(password))
-		err = keychain.UpdateItem(originalItem, updateItem)
 
-		if err != nil {
-			log.Printf("[KEYCHAIN] Updating error %s", err)
-		}
+		// There should only ever be one result
+		err = keychain.UpdateItem(originalItem, updateItem)
 	}
 
-	// TODO: stop swallowing errors
 	return err
 }
 

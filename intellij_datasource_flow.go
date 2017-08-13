@@ -12,17 +12,15 @@ import (
 type IntellijDatabaseUUID string
 type IntellijDatasourceFilepath string
 
-// An IntellijDatasource knows how to update the username
+// An IntellijDatasourceFlow knows how to update the username
 // and password for a single database with a particular IntelliJ UUID.
 // It does this by using dataSources.local.xml files.
-type IntellijDatasource struct {
-	DatabaseUUID        IntellijDatabaseUUID
-	DatasourceFilepath  IntellijDatasourceFilepath
-	TrustedApplications []string
+type IntellijDatasourceFlow struct {
+	IntellijDatasourceConfig
 	NewVaultSecret      *api.Secret
 }
 
-func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijDatasourceFile) (string, error) {
+func (ds *IntellijDatasourceFlow) pureUpdateCredentials(datagripConfig *IntellijDatasourceFile) (string, error) {
 	// Updaters: updates to in-memory data. Should be done
 	// sequentially, but no IO is done.
 	oldUsername, err := datagripConfig.UpdateUsername(ds.DatabaseUUID, ds.NewVaultSecret)
@@ -34,7 +32,7 @@ func (ds *IntellijDatasource) pureUpdateCredentials(datagripConfig *IntellijData
 	return oldUsername, nil
 }
 
-func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (err error) {
+func (ds *IntellijDatasourceFlow) writeCredentials(config *IntellijDatasourceFile) (err error) {
 	// Writing: side-effecting writes to files and forms of IO and things.
 	// In this case, we write to the IntellJ config file and the OSX keychain
 	// Should be done sequentially.
@@ -51,7 +49,7 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (
 		return errors.New("[VAULT AUTH] Could not parse password out of Vault secret response.")
 	}
 
-	err = config.Document.WriteToFile(string(ds.DatasourceFilepath))
+	err = config.Document.WriteToFile(string(ds.DatasourceFilePath))
 	if err != nil {
 		return err
 	}
@@ -68,8 +66,8 @@ func (ds *IntellijDatasource) writeCredentials(config *IntellijDatasourceFile) (
 }
 
 // A side effecting function that updates the
-func (ds *IntellijDatasource) UpdateCredentials() (err error) {
-	datagripConfig, err := NewIntellijDatasourceFile(ds.DatasourceFilepath)
+func (ds *IntellijDatasourceFlow) UpdateCredentials() (err error) {
+	datagripConfig, err := NewIntellijDatasourceFile(ds.DatasourceFilePath)
 	if err != nil {
 		return
 	}

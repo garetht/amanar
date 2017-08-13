@@ -9,7 +9,7 @@ func main() {
 	configItems, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("[CONFIG] Could not load configuration file: %s", err)
 		return
 	}
 

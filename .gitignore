@@ -2,5 +2,6 @@
 *.iml
 Godeps/_workspace
 backup.xml
+plist.xml
 amanar
 configuration.json

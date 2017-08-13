@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/hashicorp/vault/api"
-	"log"
-	"io/ioutil"
-	"github.com/xeipuuv/gojsonschema"
 	"encoding/json"
+	"io/ioutil"
+	"log"
+
+	"github.com/hashicorp/vault/api"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 type AmanarConfiguration []AmanarConfigItem
@@ -30,6 +31,7 @@ type IntellijDatasourceConfig struct {
 type IntellijRunConfigurationsConfig struct {
 	RunConfigurationsFolderPath string `json:"run_configurations_folder_path"`
 	EnvironmentVariable         string `json:"environment_variable"`
+	DatabaseHost                string `json:"database_host"`
 }
 
 func ProcessConfigItem(configurables *AmanarConfigurables, secret *api.Secret) {
@@ -86,15 +88,18 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 }
 
 func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, secret *api.Secret) error {
-	source := IntellijDatasource{
-		DatabaseUUID: datasourceConfig.DatabaseUUID,
-		DatasourceFilepath: datasourceConfig.DatasourceFilePath,
-		NewVaultSecret: secret,
-		TrustedApplications: datasourceConfig.TrustedApplications,
+	flow := IntellijDatasourceFlow{
+		IntellijDatasourceConfig: *datasourceConfig,
+		NewVaultSecret:           secret,
 	}
-	return source.UpdateCredentials()
+	return flow.UpdateCredentials()
 }
 
-func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, secret *api.Secret) error {
-	return nil
+func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, secret *api.Secret) (err error) {
+	flow := IntellijRunConfigsFlow{
+		IntellijRunConfigurationsConfig: *runConfigurationsConfig,
+		NewVaultSecret:                  secret,
+	}
+
+	return flow.UpdateCredentials()
 }
