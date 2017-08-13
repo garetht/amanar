@@ -8,15 +8,18 @@
     "type": "object",
     "properties": {
       "vault_path": {
+        "description": "The path representing the datastore in the Vault.",
         "type": "string"
       },
       "vault_role": {
+        "description": "The role representing the permissions that are sought to the Vault datastore.",
         "type": "string"
       },
       "configurables": {
         "type": "object",
         "properties": {
           "intellij_datasources": {
+            "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
             "items": {
               "required": [
                 "database_uuid",
@@ -25,15 +28,18 @@
               "type": "object",
               "properties": {
                 "datasource_file_path": {
+                  "description": "The path to IntelliJ data sources file. This file usually is named dataSources.local.xml.",
                   "type": "string"
                 },
                 "trusted_applications": {
+                  "description": "If the Keychain entries you want to create already exist, this is unnecessary. A list of full paths to applications to allow the Keychain to trust to reduce the number of permissions prompts. This path should end in .app.",
                   "items": {
                     "type": "string"
                   },
                   "type": "array"
                 },
                 "database_uuid": {
+                  "description": "The IntelliJ UUID for the database you want to update. You can find this by examining the dataSources.local.xml file.",
                   "type": "string"
                 }
               }
@@ -41,6 +47,7 @@
             "type": "array"
           },
           "intellij_run_configurations": {
+            "description": "Allows changes to database access credentials within run configurations.",
             "items": {
               "required": [
                 "environment_variable",
@@ -50,13 +57,16 @@
               "type": "object",
               "properties": {
                 "run_configurations_folder_path": {
+                  "description": "A directory containing all IntelliJ run configurations to be examined. Usually located in .idea/runConfigurations. Run configurations may need to be shared before becoming visible in this folder.",
                   "type": "string"
                 },
                 "environment_variable": {
+                  "description": "The environment variable in the run configuration under which the database connection",
                   "type": "string"
                 },
                 "database_host": {
-                    "type": "string"
+                  "description": "The username and password for the URL will only be updated if the host of URL in the environment variable matches this string.",
+                  "type": "string"
                 }
               }
             },
