@@ -5,15 +5,16 @@
         "configurables": {
             "intellij_datasources": [
                 {
-                    "datasource_file_path": "here/there",
+                    "datasource_file_path": "/full/path",
                     "database_uuid": "1234-32123",
                     "trusted_applications": ["/Applications/App.app"]
                 }
             ],
             "intellij_run_configurations": [
                 {
-                    "run_configurations_folder_path": "here/there",
-                    "environment_variable": "thing"
+                    "run_configurations_folder_path": "/full/path",
+                    "environment_variable": "thing",
+                    "database_host": "database.service.stag"
                 }
             ]
         }
