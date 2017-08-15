@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/hashicorp/vault/api"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -34,11 +33,11 @@ type IntellijRunConfigurationsConfig struct {
 	DatabaseHost                string `json:"database_host"`
 }
 
-func ProcessConfigItem(configurables *AmanarConfigurables, secret *api.Secret) {
+func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
 	var err error
 	for _, datasourceConfig := range configurables.IntellijDatasources {
 		log.Printf("[DATSOURCE CONFIG] Processing datasource config at %s with UUID %s", datasourceConfig.DatasourceFilePath, datasourceConfig.DatabaseUUID)
-		err = processDatasourceConfig(&datasourceConfig, secret)
+		err = processDatasourceConfig(&datasourceConfig, credentials)
 		if err != nil {
 			log.Printf("[DATASOURCE CONFIG] Could not process datasource config %#v because %s. Skipping ahead.", datasourceConfig, err)
 		}
@@ -46,7 +45,7 @@ func ProcessConfigItem(configurables *AmanarConfigurables, secret *api.Secret) {
 
 	for _, runConfigurationsConfig := range configurables.IntellijRunConfigurations {
 		log.Printf("[RUN CONFIGURATIONS CONFIG] Processing run configurations config at %s", runConfigurationsConfig.RunConfigurationsFolderPath)
-		err = processRunConfigurationsConfig(&runConfigurationsConfig, secret)
+		err = processRunConfigurationsConfig(&runConfigurationsConfig, credentials)
 		if err != nil {
 			log.Printf("[RUN CONFIGURATIONS CONFIG] Could not process run configurations config %#v because %s. Skipping ahead.", runConfigurationsConfig, err)
 		}
@@ -87,18 +86,18 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 	return
 }
 
-func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, secret *api.Secret) error {
+func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credentials *Credentials) error {
 	flow := IntellijDatasourceFlow{
 		IntellijDatasourceConfig: *datasourceConfig,
-		NewVaultSecret:           secret,
+		NewCredentials:           credentials,
 	}
 	return flow.UpdateCredentials()
 }
 
-func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, secret *api.Secret) (err error) {
+func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) (err error) {
 	flow := IntellijRunConfigsFlow{
 		IntellijRunConfigurationsConfig: *runConfigurationsConfig,
-		NewVaultSecret:                  secret,
+		NewCredentials:                  credentials,
 	}
 
 	return flow.UpdateCredentials()

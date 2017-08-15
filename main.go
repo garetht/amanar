@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
+	executeAmanar()
+}
+
+func executeAmanar() {
 	configItems, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
 
 	if err != nil {
@@ -39,8 +43,17 @@ func main() {
 	for _, configItem := range configItems {
 		secret, err := ghc.getCredential(configItem.VaultPath, configItem.VaultRole)
 		if err != nil {
-			log.Printf("[VAULT AUTH] Could not retrieve credential for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
+			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
+			continue
 		}
-		ProcessConfigItem(&configItem.Configurables, secret)
+
+		credentials, err := CreateCredentialsFromSecret(secret)
+
+		if err != nil {
+			log.Printf("[VAULT AUTH] Could not convert Vault secret into Amanar credentials because %s. Skipping.", err)
+			continue
+		}
+
+		ProcessConfigItem(&configItem.Configurables, credentials)
 	}
 }

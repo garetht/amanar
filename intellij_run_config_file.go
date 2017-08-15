@@ -3,8 +3,6 @@ package main
 import (
 	"github.com/beevik/etree"
 	"net/url"
-	"errors"
-	"github.com/hashicorp/vault/api"
 	"log"
 )
 
@@ -29,20 +27,13 @@ type IntellijRunConfig struct {
 	Fullpath string
 }
 
-func (rc *IntellijRunConfig) UpdateEnvironmentVariable(environmentVariable, databaseHost string, secret *api.Secret) (err error) {
-	newUsername, oku := secret.Data["username"].(string)
-	newPassword, okp := secret.Data["password"].(string)
-
+func (rc *IntellijRunConfig) UpdateEnvironmentVariable(environmentVariable, databaseHost string, credentials *Credentials) (err error) {
 	envVars := rc.Document.SelectElement("component").SelectElement("configuration").SelectElement("envs")
 	for _, envVar := range envVars.SelectElements("env") {
 		if envVarName := envVar.SelectAttrValue("name", ""); envVarName == environmentVariable {
 
-			if !oku || !okp {
-				return errors.New("Could not obtain username or password from secret.")
-			}
-
 			value := envVar.SelectAttrValue("value", "")
-			updatedValue, err := createOrUpdateUsernamePasswordWithHost(value, databaseHost, newUsername, newPassword)
+			updatedValue, err := createOrUpdateUsernamePasswordWithHost(value, databaseHost, credentials.Username, credentials.Password)
 
 			if err != nil {
 				return err

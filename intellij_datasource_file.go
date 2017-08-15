@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/beevik/etree"
-	"github.com/hashicorp/vault/api"
-	"errors"
 )
 
 // Tested with DataGrip 2017.2
@@ -33,19 +31,11 @@ type IntellijDatasourceFile struct {
 	Document *etree.Document
 }
 
-func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, secret *api.Secret) (oldUsername string, err error) {
-	newUsername, ok := secret.Data["username"].(string)
-
+func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, credentials *Credentials) (oldUsername string, err error) {
 	component := dc.Document.SelectElement("project").SelectElement("component")
 
 	for _, dataSource := range component.SelectElements("data-source") {
 		if uuid := dataSource.SelectAttrValue("uuid", ""); IntellijDatabaseUUID(uuid) == databaseUuid {
-
-			// This is in here because we count the update to have succeeded if the
-			// database UUID does not exist in the config file
-			if !ok {
-				return "", errors.New("Could not update database UUID %s because secret lacked a username.")
-			}
 
 			username := dataSource.SelectElement("user-name")
 			if username == nil {
@@ -53,7 +43,7 @@ func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUU
 			}
 
 			oldUsername = username.Text()
-			username.SetText(newUsername)
+			username.SetText(credentials.Username)
 			return oldUsername, nil
 
 		}

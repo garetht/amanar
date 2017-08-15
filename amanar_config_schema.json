@@ -47,7 +47,7 @@
             "type": "array"
           },
           "intellij_run_configurations": {
-            "description": "Allows changes to database access credentials within run configurations.",
+            "description": "Allows changes to database access credentials within IntelliJ run configurations.",
             "items": {
               "required": [
                 "environment_variable",
@@ -66,6 +66,27 @@
                 },
                 "database_host": {
                   "description": "The username and password for the URL will only be updated if the host of URL in the environment variable matches this string.",
+                  "type": "string"
+                }
+              }
+            },
+            "type": "array"
+          },
+          "querious2_datasources": {
+            "description": "Allows changes to database access credentials a Querious 2 SQLite database.",
+            "items": {
+              "required": [
+                "querious_sqlite_path",
+                "database_uuid"
+              ],
+              "type": "object",
+              "properties": {
+                "querious_sqlite_path": {
+                  "description": "Path to the SQLite database in which Querious 2 stores its data.",
+                  "type": "string"
+                },
+                "database_uuid": {
+                  "description": "The unique identifier for the Querious database to update. Can be found by looking in the SQLite database.",
                   "type": "string"
                 }
               }

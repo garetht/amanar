@@ -1,12 +1,9 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	"log"
-
-	"github.com/hashicorp/vault/api"
 )
 
 type IntellijDatabaseUUID string
@@ -17,13 +14,13 @@ type IntellijDatasourceFilepath string
 // It does this by using dataSources.local.xml files.
 type IntellijDatasourceFlow struct {
 	IntellijDatasourceConfig
-	NewVaultSecret      *api.Secret
+	NewCredentials *Credentials
 }
 
 func (ds *IntellijDatasourceFlow) pureUpdateCredentials(datagripConfig *IntellijDatasourceFile) (string, error) {
 	// Updaters: updates to in-memory data. Should be done
 	// sequentially, but no IO is done.
-	oldUsername, err := datagripConfig.UpdateUsername(ds.DatabaseUUID, ds.NewVaultSecret)
+	oldUsername, err := datagripConfig.UpdateUsername(ds.DatabaseUUID, ds.NewCredentials)
 
 	if err != nil {
 		return "", err
@@ -39,26 +36,16 @@ func (ds *IntellijDatasourceFlow) writeCredentials(config *IntellijDatasourceFil
 
 	service := fmt.Sprintf("IntelliJ Platform DB — %s", ds.DatabaseUUID)
 
-	newUsername, ok := ds.NewVaultSecret.Data["username"].(string)
-	if !ok {
-		return errors.New("[VAULT AUTH] Could not parse username out of Vault secret response.")
-	}
-
-	password, ok := ds.NewVaultSecret.Data["password"].(string)
-	if !ok {
-		return errors.New("[VAULT AUTH] Could not parse password out of Vault secret response.")
-	}
-
 	err = config.Document.WriteToFile(string(ds.DatasourceFilePath))
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DATASOURCE %s] Writing new username %s and password %s to Keychain", service, newUsername, password)
-	err = CreateOrUpdateKeychainEntriesForService(service, newUsername, password, ds.TrustedApplications)
+	log.Printf("[DATASOURCE %s] Writing new username %s and password %s to Keychain", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
+	err = CreateOrUpdateKeychainEntriesForService(service, ds.NewCredentials.Username, ds.NewCredentials.Password, ds.TrustedApplications)
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, newUsername, password)
+		log.Fatalf("[DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
 		return err
 	}
 

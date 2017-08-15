@@ -10,7 +10,7 @@ import (
 
 type IntellijRunConfigsFlow struct {
 	IntellijRunConfigurationsConfig
-	NewVaultSecret *api.Secret
+	NewCredentials *Credentials
 }
 
 func (rc *IntellijRunConfigsFlow) parseRunConfigs() (rcs []*IntellijRunConfig, err error) {
@@ -43,7 +43,7 @@ func (rc *IntellijRunConfigsFlow) UpdateCredentials() (err error) {
 	}
 
 	for _, runConfig := range runConfigs {
-		runConfig.UpdateEnvironmentVariable(rc.EnvironmentVariable, rc.DatabaseHost, rc.NewVaultSecret)
+		runConfig.UpdateEnvironmentVariable(rc.EnvironmentVariable, rc.DatabaseHost, rc.NewCredentials)
 	}
 
 	for _, runConfig := range runConfigs {
