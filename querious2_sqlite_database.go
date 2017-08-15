@@ -29,7 +29,6 @@ func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, credenti
 	_, err = statement.Exec(credentials.Username, databaseUuid)
 
 	defer statement.Close()
-	defer db.Close()
 
 	return err
 }

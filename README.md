@@ -16,6 +16,8 @@ The usage of this program depends on three environment variables:
 - *GITHUB_TOKEN*, specifying the personal Github token which will allow refreshed Vault credentials to be retrieved
 - *CONFIG_FILEPATH*, specifying the location of your configuration file
 
+The program makes certain assumptions about the state of your keychain and configuration files. It cannot be used to create new keychain or configuration entries, only update them. In addition, there should be only one keychain entry per unique identifier (usually the database UUID) so that the correct keychain item to update can be selected without reference to a particular user account.
+
 ## Configuration
 
 The configuration file that must be provided is a JSON file conforming to the JSON Schema set forth in `amanar_config_schema.json`. Information on each of the options is given as the `description` attribute in the schema.

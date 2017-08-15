@@ -57,7 +57,7 @@ func createOrUpdateUsernamePasswordWithHost(urlValue, databaseHost, username, pa
 	}
 
 	if databaseHost == parsedUrl.Host {
-		log.Printf("[RUN CONFIGS] Updating URL %s with new username %s and password %s", urlValue, username, password)
+		log.Printf("[RUN CONFIGS] Updating URL %s with username %s and password %s", urlValue, username, password)
 
 		newUserInfo := url.UserPassword(username, password)
 		parsedUrl.User = newUserInfo
