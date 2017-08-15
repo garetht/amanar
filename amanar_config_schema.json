@@ -76,12 +76,12 @@
             "description": "Allows changes to database access credentials a Querious 2 SQLite database.",
             "items": {
               "required": [
-                "querious_sqlite_path",
+                "querious2_sqlite_path",
                 "database_uuid"
               ],
               "type": "object",
               "properties": {
-                "querious_sqlite_path": {
+                "querious2_sqlite_path": {
                   "description": "Path to the SQLite database in which Querious 2 stores its data.",
                   "type": "string"
                 },

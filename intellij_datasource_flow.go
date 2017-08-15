@@ -41,11 +41,11 @@ func (ds *IntellijDatasourceFlow) writeCredentials(config *IntellijDatasourceFil
 		return err
 	}
 
-	log.Printf("[DATASOURCE %s] Writing new username %s and password %s to Keychain", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
+	log.Printf("[INTELLIJ DATASOURCE %s] Writing new username %s and password %s to Keychain", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
 	err = CreateOrUpdateKeychainEntriesForService(service, ds.NewCredentials.Username, ds.NewCredentials.Password, ds.TrustedApplications)
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
+		log.Fatalf("[INTELLIJ DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, ds.NewCredentials.Username, ds.NewCredentials.Password)
 		return err
 	}
 

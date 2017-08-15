@@ -38,7 +38,9 @@ func CreateOrUpdateKeychainEntriesForService(service, account, password string, 
 		originalItem.SetAccount(result.Account)
 
 		updateItem := keychain.NewItem()
-		updateItem.SetAccount(account)
+		if account != "" {
+			updateItem.SetAccount(account)
+		}
 		updateItem.SetData([]byte(password))
 
 		// There should only ever be one result

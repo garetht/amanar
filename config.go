@@ -19,6 +19,7 @@ type AmanarConfigItem struct {
 type AmanarConfigurables struct {
 	IntellijDatasources       []IntellijDatasourceConfig        `json:"intellij_datasources"`
 	IntellijRunConfigurations []IntellijRunConfigurationsConfig `json:"intellij_run_configurations"`
+	Querious2Datasources      []Querious2DatasourcesConfig      `json:"querious2_datasources"`
 }
 
 type IntellijDatasourceConfig struct {
@@ -32,6 +33,12 @@ type IntellijRunConfigurationsConfig struct {
 	EnvironmentVariable         string `json:"environment_variable"`
 	DatabaseHost                string `json:"database_host"`
 }
+
+type Querious2DatasourcesConfig struct {
+	Querious2SQLitePath string `json:"querious2_sqlite_path"`
+	DatabaseUUID        string `json:"database_uuid"`
+}
+
 
 func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
 	var err error
@@ -48,6 +55,14 @@ func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credenti
 		err = processRunConfigurationsConfig(&runConfigurationsConfig, credentials)
 		if err != nil {
 			log.Printf("[RUN CONFIGURATIONS CONFIG] Could not process run configurations config %#v because %s. Skipping ahead.", runConfigurationsConfig, err)
+		}
+	}
+
+	for _, querious2Config := range configurables.Querious2Datasources {
+		log.Printf("[QUERIOUS 2 CONFIG] Processing Querious 2 SQLite database at %s", querious2Config.Querious2SQLitePath)
+		err = processQuerious2Config(&querious2Config, credentials)
+		if err != nil {
+			log.Printf("[QUERIOUS 2 CONFIG] Could not process Querious 2 %#v because %s. Skipping ahead.", querious2Config, err)
 		}
 	}
 	return
@@ -94,10 +109,19 @@ func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credent
 	return flow.UpdateCredentials()
 }
 
-func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) (err error) {
+func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) error {
 	flow := IntellijRunConfigsFlow{
 		IntellijRunConfigurationsConfig: *runConfigurationsConfig,
 		NewCredentials:                  credentials,
+	}
+
+	return flow.UpdateCredentials()
+}
+
+func processQuerious2Config(querious2Config *Querious2DatasourcesConfig, credentials *Credentials) error {
+	flow := Querious2Flow{
+		Querious2DatasourcesConfig: *querious2Config,
+		NewCredentials:             credentials,
 	}
 
 	return flow.UpdateCredentials()

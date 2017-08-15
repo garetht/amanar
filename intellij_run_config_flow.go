@@ -4,8 +4,6 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-
-	"github.com/hashicorp/vault/api"
 )
 
 type IntellijRunConfigsFlow struct {

@@ -6,6 +6,36 @@ import (
 )
 
 func main() {
+	//db, err := sql.Open("sqlite3", `/Users/garethtan/Library/Application Support/Querious/Connections.sqlite`)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//rows, err := db.Query("SELECT name FROM sqlite_master WHERE type='table'")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//var tableName string
+	//for rows.Next() {
+	//	err = rows.Scan(&tableName)
+	//	fmt.Println(tableName)
+	//}
+	//
+	//rows, err = db.Query("SELECT uuid FROM connection_settings")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//var uuid string
+	//for rows.Next() {
+	//	err = rows.Scan(&uuid)
+	//	fmt.Println(uuid)
+	//}
+	//
+	//statement, err := db.Prepare("UPDATE connection_settings SET user=? where uuid=?")
+	//statement.Exec("newuser14", "88879A23-9708-4CB4-8C39-5D88735A9DE2")
+
 	executeAmanar()
 }
 
