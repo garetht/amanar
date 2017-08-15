@@ -1,8 +1,12 @@
 Amanar
 ===
 
-A tool to programmatically insert refreshed HashiCorp Vault credentials into IntelliJ configurations.
+A tool to programmatically insert refreshed HashiCorp Vault credentials into desktop database application configurations.
 
+## Supported Applications
+- IntelliJ 2017.2 datasources (e.g. Datagrip)
+- IntelliJ 2017.2 run configurations
+- Querious 2
 
 ## Usage
 
