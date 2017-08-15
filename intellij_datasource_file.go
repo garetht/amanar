@@ -15,6 +15,7 @@ func NewIntellijDatasourceFile(filepath IntellijDatasourceFilepath) (*IntellijDa
 
 	dc := &IntellijDatasourceFile{
 		Document: d,
+		Fullpath: filepath,
 	}
 
 	return dc, nil
@@ -29,6 +30,7 @@ func NewIntellijDatasourceFile(filepath IntellijDatasourceFilepath) (*IntellijDa
 // that the former is the case.
 type IntellijDatasourceFile struct {
 	Document *etree.Document
+	Fullpath IntellijDatasourceFilepath
 }
 
 func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, credentials *Credentials) (oldUsername string, err error) {
@@ -45,9 +47,12 @@ func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUU
 			oldUsername = username.Text()
 			username.SetText(credentials.Username)
 			return oldUsername, nil
-
 		}
 	}
 
 	return "", nil
+}
+
+func (dc *IntellijDatasourceFile) WriteToFile() error {
+	return dc.Document.WriteToFile(string(dc.Fullpath))
 }

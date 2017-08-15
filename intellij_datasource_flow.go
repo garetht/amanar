@@ -36,7 +36,7 @@ func (ds *IntellijDatasourceFlow) writeCredentials(config *IntellijDatasourceFil
 
 	service := fmt.Sprintf("IntelliJ Platform DB — %s", ds.DatabaseUUID)
 
-	err = config.Document.WriteToFile(string(ds.DatasourceFilePath))
+	err = config.WriteToFile()
 	if err != nil {
 		return err
 	}

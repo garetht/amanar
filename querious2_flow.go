@@ -17,7 +17,7 @@ func (qf *Querious2Flow) UpdateCredentials() (err error) {
 		return
 	}
 
-	err = database.WriteToDatabase(qf.DatabaseUUID, qf.NewCredentials)
+	err = database.UpdateUsername(qf.DatabaseUUID, qf.NewCredentials)
 	if err != nil {
 		return
 	}
