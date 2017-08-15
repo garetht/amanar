@@ -28,7 +28,7 @@ This is a Mac OS-specific project. It may be possible to make this work with a L
 
 The project has been successfully built on Go `1.8.3` on Mac OS 10.12.5. The mininum possible Go version required is `1.8.1`.
 
-`cgo` is also used to interface with OSX Foundation and Security libraries. You may require `CGO_ENABLED=1` to build this project.
+`cgo` is also used to interface with OSX Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
 
 ## Developing: Regenerating Bindata
 
