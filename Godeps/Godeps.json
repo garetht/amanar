@@ -114,6 +114,27 @@
 		{
 			"ImportPath": "github.com/keybase/go-keychain",
 			"Rev": "69c518e5bfff89ad62db81a185634d3aeac3c453"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Comment": "v1.2.0-105-g6654e41",
+			"Rev": "6654e412c3c7eabb310d920cf73a2102dbf8c632"
+		},
+		{
+			"ImportPath": "github.com/xeipuuv/gojsonpointer",
+			"Rev": "6fe8760cad3569743d51ddbb243b26f8456742dc"
+		},
+		{
+			"ImportPath": "github.com/xeipuuv/gojsonreference",
+			"Rev": "e02fc20de94c78484cd5ffb007f8af96be030a45"
+		},
+		{
+			"ImportPath": "github.com/xeipuuv/gojsonschema",
+			"Rev": "0c8571ac0ce161a5feb57375a9cdf148c98c0f70"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "7dbad50ab5b31073856416cdcfeb2796d682f844"
 		}
 	]
 }
