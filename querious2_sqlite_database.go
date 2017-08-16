@@ -20,7 +20,7 @@ type Querious2SQLiteDatabase struct {
 func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, credentials *Credentials) error {
 	db, err := sql.Open("sqlite3", qdb.Filepath)
 
-	statement, err := db.Prepare("UPDATE connection_settings SET user=? WHERE databaseUuid=?")
+	statement, err := db.Prepare("UPDATE connection_settings SET user=? WHERE uuid=?")
 
 	if err != nil {
 		return err
