@@ -6,6 +6,12 @@ import (
 	"path/filepath"
 )
 
+// UpdateUsername - must not have side effects
+// UpdatePassword - must not have side effects
+// In the database these actions are simply queued for later execution
+// Persist
+
+
 type IntellijRunConfigsFlow struct {
 	IntellijRunConfigurationsConfig
 	NewCredentials *Credentials

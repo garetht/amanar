@@ -25,7 +25,6 @@ type AmanarConfigurables struct {
 type IntellijDatasourceConfig struct {
 	DatasourceFilePath  IntellijDatasourceFilepath `json:"datasource_file_path"`
 	DatabaseUUID        IntellijDatabaseUUID       `json:"database_uuid"`
-	TrustedApplications []string                   `json:"trusted_applications"`
 }
 
 type IntellijRunConfigurationsConfig struct {

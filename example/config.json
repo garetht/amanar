@@ -6,8 +6,7 @@
             "intellij_datasources": [
                 {
                     "datasource_file_path": "/full/path",
-                    "database_uuid": "1234-32123",
-                    "trusted_applications": ["/Applications/App.app"]
+                    "database_uuid": "1234-32123"
                 }
             ],
             "intellij_run_configurations": [
@@ -17,12 +16,18 @@
                     "database_host": "database.service.stag"
                 }
             ],
-          "querious2_datasources": [
-            {
-              "querious2_sqlite_path": "/path/to/database.sqlite",
-              "database_uuid": "1234A-2234B-3234C"
-            }
-          ]
+            "querious2_datasources": [
+                {
+                    "querious2_sqlite_path": "/path/to/database.sqlite",
+                    "database_uuid": "1234A-2234B-3234C"
+                }
+            ],
+            "sequel_pro_datasources": [
+                {
+                    "sequel_pro_plist_path": "/path/to/sequel/pro.plist",
+                    "database_uuid": "120309129302"
+                }
+            ]
         }
     }
 ]
