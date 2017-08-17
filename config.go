@@ -128,11 +128,12 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 }
 
 func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credentials *Credentials) error {
-	flow := IntellijDatasourceFlow{
-		IntellijDatasourceConfig: *datasourceConfig,
-		NewCredentials:           credentials,
+	flow, err := NewIntellijDatasourceFlow(datasourceConfig)
+	if err != nil {
+		return err
 	}
-	return flow.UpdateCredentials()
+
+	return flow.UpdateCredentials(credentials)
 }
 
 func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) error {
@@ -145,12 +146,12 @@ func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigur
 }
 
 func processQuerious2Config(querious2Config *Querious2DatasourcesConfig, credentials *Credentials) error {
-	flow := Querious2Flow{
-		Querious2DatasourcesConfig: *querious2Config,
-		NewCredentials:             credentials,
+	flow, err := NewQuerious2Flow(querious2Config)
+	if err != nil {
+		return err
 	}
 
-	return flow.UpdateCredentials()
+	return flow.UpdateCredentials(credentials)
 }
 
 func processSequelProConfig(sequelProConfig *SequelProDatasourcesConfig, credentials *Credentials) error {

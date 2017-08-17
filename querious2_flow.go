@@ -1,37 +1,69 @@
 package main
 
 import (
-	"log"
 	"fmt"
+	"log"
+	"errors"
 )
+
+func NewQuerious2Flow(config *Querious2DatasourcesConfig) (*Querious2Flow, error) {
+	database, err := NewQuerious2SQLiteDatabase(config.Querious2SQLitePath)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Querious2Flow{
+		Querious2DatasourcesConfig: *config,
+		database:                   database,
+	}, nil
+
+}
 
 type Querious2Flow struct {
 	Querious2DatasourcesConfig
-	NewCredentials *Credentials
+	database    *Querious2SQLiteDatabase
+	credentials *Credentials
 }
 
-func (qf *Querious2Flow) UpdateCredentials() (err error) {
-	database, err := NewQuerious2SQLiteDatabase(qf.Querious2SQLitePath)
+func (qf *Querious2Flow) UpdateWithCredentials(credentials *Credentials) error {
+	qf.credentials = credentials
+	return nil
+}
 
-	if err != nil {
-		return
+func (qf *Querious2Flow) PersistChanges() (err error) {
+	if qf.credentials == nil {
+		return errors.New("Please provide credentials to update")
 	}
 
-	err = database.UpdateUsername(qf.DatabaseUUID, qf.NewCredentials)
+	err = qf.database.UpdateUsername(qf.DatabaseUUID, qf.credentials.Username)
 	if err != nil {
 		return
 	}
 
 	service := fmt.Sprintf("MySQL %s", qf.DatabaseUUID)
 
-	log.Printf("[QUERIOUS2 DATASOURCE %s] Writing new username %s and password %s to Keychain", service, qf.NewCredentials.Username, qf.NewCredentials.Password)
+	log.Printf("[QUERIOUS2 DATASOURCE %s] Writing new username %s and password %s to Keychain", service, qf.usernameToUpdate, qf.passwordToUpdate)
 	// Querious 2 finds its item in the keychain based a hashlike combination of the keychain filepath,
 	// account, and service. We therefore do not alter any of these things./
 	// (connection_settings.keychainItemRefMySQL)
-	err = CreateOrUpdateKeychainEntriesForService(service, "", qf.NewCredentials.Password, []string{})
+	err = CreateOrUpdateKeychainEntriesForService(service, "", qf.credentials.Password, []string{})
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[QUERIOUS2 DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, qf.NewCredentials.Username, qf.NewCredentials.Password)
+		log.Fatalf("[QUERIOUS2 DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, qf.usernameToUpdate, qf.passwordToUpdate)
+		return
+	}
+
+	return nil
+}
+
+func (qf *Querious2Flow) UpdateCredentials(credentials *Credentials) (err error) {
+	err = qf.UpdateWithCredentials(credentials)
+	if err != nil {
+		return
+	}
+
+	err = qf.PersistChanges()
+	if err != nil {
 		return
 	}
 

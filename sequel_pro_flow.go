@@ -65,8 +65,8 @@ func NewSequelProFlow(config *SequelProDatasourcesConfig) (spf *SequelProFlow, e
 
 type SequelProFlow struct {
 	SequelProDatasourcesConfig
-	plist            SequelProRootPlist
-	passwordToUpdate string
+	plist       SequelProRootPlist
+	credentials *Credentials
 }
 
 func (sp *SequelProFlow) findPlistItem() (plistItem *SequelProPlistItem, foundItem bool) {
@@ -83,18 +83,15 @@ func (sp *SequelProFlow) findPlistItem() (plistItem *SequelProPlistItem, foundIt
 	return
 }
 
-func (sp *SequelProFlow) UpdateUsername(username string) (err error) {
+func (sp *SequelProFlow) UpdateWithCredentials(credentials *Credentials) (err error) {
 	plistItem, found := sp.findPlistItem()
 	if !found {
 		return errors.New(fmt.Sprintf("[SEQUEL PRO] Could not find plist item for database UUID %d", sp.DatabaseUUID))
 	}
 
-	plistItem.User = username
-	return
-}
+	plistItem.User = credentials.Username
+	sp.credentials = credentials
 
-func (sp *SequelProFlow) UpdatePassword(password string) error {
-	sp.passwordToUpdate = password
 	return nil
 }
 
@@ -108,7 +105,7 @@ func (sp *SequelProFlow) PersistChanges() (err error) {
 	// read the correct keychain value.
 	service := fmt.Sprintf("Sequel Pro : %s (%d)", plistItem.Name, plistItem.Id)
 	account := fmt.Sprintf("%s@%s/%s", plistItem.User, plistItem.Host, plistItem.Database)
-	log.Printf("[SEQUEL PRO] Persisting username %s and password %s to service %s and account %s", plistItem.User, sp.passwordToUpdate, service, account)
+	log.Printf("[SEQUEL PRO] Persisting username %s and password %s to service %s and account %s", plistItem.User, sp.credentials.Password, service, account)
 
 	bytes, err := plist.Marshal(sp.plist, SEQUEL_PRO_PLIST_FORMAT)
 	if err != nil {
@@ -117,16 +114,11 @@ func (sp *SequelProFlow) PersistChanges() (err error) {
 
 	ioutil.WriteFile(sp.SequelProPlistPath, bytes, 0644)
 
-	return CreateOrUpdateKeychainEntriesForService(service, account, sp.passwordToUpdate, []string{})
+	return CreateOrUpdateKeychainEntriesForService(service, account, sp.credentials.Password, []string{})
 }
 
 func (sp *SequelProFlow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = sp.UpdateUsername(credentials.Username)
-	if err != nil {
-		return
-	}
-
-	err = sp.UpdatePassword(credentials.Password)
+	err = sp.UpdateWithCredentials(credentials)
 	if err != nil {
 		return
 	}

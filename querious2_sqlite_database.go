@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 )
 
 func NewQuerious2SQLiteDatabase(filepath string) (*Querious2SQLiteDatabase, error) {
@@ -17,7 +18,7 @@ type Querious2SQLiteDatabase struct {
 	Filepath string
 }
 
-func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, credentials *Credentials) error {
+func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, username string) error {
 	db, err := sql.Open("sqlite3", qdb.Filepath)
 
 	statement, err := db.Prepare("UPDATE connection_settings SET user=? WHERE uuid=?")

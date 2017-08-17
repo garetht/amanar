@@ -19,23 +19,17 @@ func NewPosticoFlow(config *PosticoDatasourcesConfig) (*PosticoFlow, error) {
 
 type PosticoFlow struct {
 	PosticoDatasourcesConfig
-	database         *PosticoSQLiteDatabase
-	usernameToUpdate string
-	passwordToUpdate string
+	database    *PosticoSQLiteDatabase
+	credentials *Credentials
 }
 
-func (pf *PosticoFlow) UpdateUsername(username string) error {
-	pf.usernameToUpdate = username
-	return nil
-}
-
-func (pf *PosticoFlow) UpdatePassword(password string) error {
-	pf.passwordToUpdate = password
+func (pf *PosticoFlow) UpdateWithCredentials(credentials *Credentials) error {
+	pf.credentials = credentials
 	return nil
 }
 
 func (pf *PosticoFlow) PersistChanges() (err error) {
-	err = pf.database.UpdateUsername(pf.DatabaseUUID, pf.usernameToUpdate)
+	err = pf.database.UpdateUsername(pf.DatabaseUUID, pf.credentials.Username)
 	if err != nil {
 		return
 	}
@@ -51,14 +45,14 @@ func (pf *PosticoFlow) PersistChanges() (err error) {
 	}
 
 	service := fmt.Sprintf("postgresql://%s", host)
-	log.Printf("[POSTICO DATASOURCE %s] Writing new username %s and password %s to Keychain", service, pf.usernameToUpdate, pf.passwordToUpdate)
+	log.Printf("[POSTICO DATASOURCE %s] Writing new username %s and password %s to Keychain", service, pf.credentials.Username, pf.credentials.Password)
 	// Querious 2 finds its item in the keychain based a hashlike combination of the keychain filepath,
 	// account, and service. We therefore do not alter any of these things./
 	// (connection_settings.keychainItemRefMySQL)
-	err = CreateOrUpdateKeychainEntriesForService(service, pf.usernameToUpdate, pf.passwordToUpdate, []string{})
+	err = CreateOrUpdateKeychainEntriesForService(service, pf.credentials.Username, pf.credentials.Password, []string{})
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[POSTICO DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, pf.usernameToUpdate, pf.passwordToUpdate)
+		log.Fatalf("[POSTICO DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, pf.credentials.Username, pf.credentials.Password)
 		return
 	}
 
@@ -66,12 +60,7 @@ func (pf *PosticoFlow) PersistChanges() (err error) {
 }
 
 func (pf *PosticoFlow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = pf.UpdateUsername(credentials.Username)
-	if err != nil {
-		return
-	}
-
-	err = pf.UpdatePassword(credentials.Password)
+	err = pf.UpdateWithCredentials(credentials)
 	if err != nil {
 		return
 	}
