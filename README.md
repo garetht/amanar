@@ -7,6 +7,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - IntelliJ 2017.2 datasources (e.g. Datagrip)
 - IntelliJ 2017.2 run configurations
 - Querious 2
+- Sequel Pro (tested with 1.1.1)
 
 ## Usage
 
