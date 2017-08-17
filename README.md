@@ -9,6 +9,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - IntelliJ Run Configurations (tested with 2017.2)
 - Querious 2
 - Sequel Pro (tested with 1.1.1)
+- Postico (tested with 1.2.2)
 
 ## Usage
 
@@ -28,8 +29,8 @@ Note that IntelliJ-specific paths can be found with [this guide to IntelliJ stor
 
 ## Miscellaneous Notes
 
-- For best results, close applications before running Amanar. Some applications do not take kindly to their data being modified while in use.
-- Do not edit numbers in plists using XCode. They tend to change data types for no reason.
+- For best results, close applications before running Amanar. Many applications do not take kindly to their data being modified while they are in use.
+- Do not edit numbers in plists using XCode. XCode will conveniently change your data types for you.
 
 ## Building
 

@@ -113,6 +113,27 @@
                             }
                         },
                         "type": "array"
+                    },
+                    "postico_datasources": {
+                        "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
+                        "items": {
+                            "required": [
+                                "postico_sqlite_path",
+                                "database_uuid"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "postico_sqlite_path": {
+                                    "description": "Path to the SQLite database in which Postico stores its data.",
+                                    "type": "string"
+                                },
+                                "database_uuid": {
+                                    "description": "The unique identifier for the Postico database to update. Can be found by looking in the SQLite database.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "type": "array"
                     }
                 }
             }
