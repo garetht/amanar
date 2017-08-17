@@ -3,6 +3,8 @@ Amanar
 
 A tool to programmatically insert refreshed HashiCorp Vault credentials into desktop database application configurations.
 
+**You should create backup copies of all configuration files before using this tool.**
+
 ## Supported Applications
 - Datagrip (tested with 2017.2)
 - Intellij IDEA Databases (in theory)
