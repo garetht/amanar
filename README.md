@@ -24,6 +24,11 @@ The configuration file that must be provided is a JSON file conforming to the JS
 
 Note that IntelliJ-specific paths can be found with [this guide to IntelliJ storage locations](https://www.jetbrains.com/help/idea/directories-used-by-intellij-idea-to-store-settings-caches-plugins-and-logs.html) for global configurations, and usually the `.idea` directory for project-specific storage.
 
+## Miscellaneous Notes
+
+- For best results, close applications before running Amanar. Some applications do not take kindly to their data being modified while in use.
+- Do not edit numbers in plists using XCode. They tend to change data types for no reason.
+
 ## Building
 
 This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.

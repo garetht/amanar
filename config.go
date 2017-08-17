@@ -20,12 +20,12 @@ type AmanarConfigurables struct {
 	IntellijDatasources       []IntellijDatasourceConfig        `json:"intellij_datasources"`
 	IntellijRunConfigurations []IntellijRunConfigurationsConfig `json:"intellij_run_configurations"`
 	Querious2Datasources      []Querious2DatasourcesConfig      `json:"querious2_datasources"`
+	SequelProDatasources      []SequelProDatasourcesConfig      `json:"sequel_pro_datasources"`
 }
 
 type IntellijDatasourceConfig struct {
-	DatasourceFilePath  IntellijDatasourceFilepath `json:"datasource_file_path"`
-	DatabaseUUID        IntellijDatabaseUUID       `json:"database_uuid"`
-	TrustedApplications []string                   `json:"trusted_applications"`
+	DatasourceFilePath IntellijDatasourceFilepath `json:"datasource_file_path"`
+	DatabaseUUID       IntellijDatabaseUUID       `json:"database_uuid"`
 }
 
 type IntellijRunConfigurationsConfig struct {
@@ -39,6 +39,10 @@ type Querious2DatasourcesConfig struct {
 	DatabaseUUID        string `json:"database_uuid"`
 }
 
+type SequelProDatasourcesConfig struct {
+	SequelProPlistPath string `json:"sequel_pro_plist_path"`
+	DatabaseUUID       string `json:"database_uuid"`
+}
 
 func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
 	var err error
@@ -63,6 +67,14 @@ func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credenti
 		err = processQuerious2Config(&querious2Config, credentials)
 		if err != nil {
 			log.Printf("[QUERIOUS 2 CONFIG] Could not process Querious 2 %#v because %s. Skipping ahead.", querious2Config, err)
+		}
+	}
+
+	for _, sequelProConfig := range configurables.SequelProDatasources {
+		log.Printf("[SEQUEL PRO CONFIG] Processing Sequel Pro Plist file at %s", sequelProConfig.SequelProPlistPath)
+		err = processSequelProConfig(&sequelProConfig, credentials)
+		if err != nil {
+			log.Printf("[SEQUEL PRO CONFIG] Could not process Querious 2 %#v because %s. Skipping ahead.", sequelProConfig, err)
 		}
 	}
 	return
@@ -125,4 +137,13 @@ func processQuerious2Config(querious2Config *Querious2DatasourcesConfig, credent
 	}
 
 	return flow.UpdateCredentials()
+}
+
+func processSequelProConfig(sequelProConfig *SequelProDatasourcesConfig, credentials *Credentials) error {
+	flow, err := NewSequelProFlow(sequelProConfig)
+	if err != nil {
+		return err
+	}
+
+	return flow.UpdateCredentials(credentials)
 }
