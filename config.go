@@ -52,6 +52,7 @@ type PosticoDatasourcesConfig struct {
 
 func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
 	var err error
+	
 	for _, datasourceConfig := range configurables.IntellijDatasources {
 		log.Printf("[DATSOURCE CONFIG] Processing datasource config at %s with UUID %s", datasourceConfig.DatasourceFilePath, datasourceConfig.DatabaseUUID)
 		err = processDatasourceConfig(&datasourceConfig, credentials)
@@ -127,6 +128,27 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 	return
 }
 
+func UpdateCredentials(flows []Flower, credentials *Credentials) (err error) {
+	for _, flow := range flows {
+		log.Printf("[%s] Beginning to update flow %#v with credentials %s", flow.Name(), flow, credentials)
+
+		err = flow.UpdateWithCredentials(credentials)
+		if err != nil {
+			log.Printf("[%s] Error when performing non-write update to flow %#v with credentials %s. Will not try and persist externally. Skipping ahead to next flow.", flow.Name(), flow, credentials)
+			log.Print(err)
+			continue
+		}
+
+		err = flow.PersistChanges()
+		if err != nil {
+			log.Printf("[%s] Error when persisting changes to to flow %#v with credentials %s. Skipping ahead to next flow.", flow.Name(), flow, credentials)
+			log.Print(err)
+		}
+	}
+
+	return nil
+}
+
 func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credentials *Credentials) error {
 	flow, err := NewIntellijDatasourceFlow(datasourceConfig)
 	if err != nil {
@@ -139,10 +161,9 @@ func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credent
 func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) error {
 	flow := IntellijRunConfigsFlow{
 		IntellijRunConfigurationsConfig: *runConfigurationsConfig,
-		NewCredentials:                  credentials,
 	}
 
-	return flow.UpdateCredentials()
+	return flow.UpdateCredentials(credentials)
 }
 
 func processQuerious2Config(querious2Config *Querious2DatasourcesConfig, credentials *Credentials) error {
