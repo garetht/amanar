@@ -3,6 +3,10 @@
 	"GoVersion": "go1.8.3",
 	"Deps": [
 		{
+			"ImportPath": "github.com/DHowett/go-plist",
+			"Rev": "2f847ea62b17703c861484a09f0e5841328a2cb9"
+		},
+		{
 			"ImportPath": "github.com/beevik/etree",
 			"Rev": "15a30b44cfd6c5a16a7ddfe271bf146aaf2d3195"
 		},
