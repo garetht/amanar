@@ -23,6 +23,10 @@ type PosticoFlow struct {
 	credentials *Credentials
 }
 
+func (pf *PosticoFlow) Name() string {
+	return "POSTICO"
+}
+
 func (pf *PosticoFlow) UpdateWithCredentials(credentials *Credentials) error {
 	pf.credentials = credentials
 	return nil
@@ -53,20 +57,6 @@ func (pf *PosticoFlow) PersistChanges() (err error) {
 	if err != nil {
 		log.Print(err)
 		log.Fatalf("[POSTICO DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, pf.credentials.Username, pf.credentials.Password)
-		return
-	}
-
-	return nil
-}
-
-func (pf *PosticoFlow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = pf.UpdateWithCredentials(credentials)
-	if err != nil {
-		return
-	}
-
-	err = pf.PersistChanges()
-	if err != nil {
 		return
 	}
 

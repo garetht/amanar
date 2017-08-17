@@ -25,6 +25,10 @@ type Querious2Flow struct {
 	credentials *Credentials
 }
 
+func (qf *Querious2Flow) Name() string {
+	return "QUERIOUS 2"
+}
+
 func (qf *Querious2Flow) UpdateWithCredentials(credentials *Credentials) error {
 	qf.credentials = credentials
 	return nil
@@ -50,20 +54,6 @@ func (qf *Querious2Flow) PersistChanges() (err error) {
 	if err != nil {
 		log.Print(err)
 		log.Fatalf("[QUERIOUS2 DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, qf.usernameToUpdate, qf.passwordToUpdate)
-		return
-	}
-
-	return nil
-}
-
-func (qf *Querious2Flow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = qf.UpdateWithCredentials(credentials)
-	if err != nil {
-		return
-	}
-
-	err = qf.PersistChanges()
-	if err != nil {
 		return
 	}
 

@@ -83,6 +83,10 @@ func (sp *SequelProFlow) findPlistItem() (plistItem *SequelProPlistItem, foundIt
 	return
 }
 
+func (sp *SequelProFlow) Name() string {
+	return "SEQUEL PRO"
+}
+
 func (sp *SequelProFlow) UpdateWithCredentials(credentials *Credentials) (err error) {
 	plistItem, found := sp.findPlistItem()
 	if !found {
@@ -115,18 +119,4 @@ func (sp *SequelProFlow) PersistChanges() (err error) {
 	ioutil.WriteFile(sp.SequelProPlistPath, bytes, 0644)
 
 	return CreateOrUpdateKeychainEntriesForService(service, account, sp.credentials.Password, []string{})
-}
-
-func (sp *SequelProFlow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = sp.UpdateWithCredentials(credentials)
-	if err != nil {
-		return
-	}
-
-	err = sp.PersistChanges()
-	if err != nil {
-		return
-	}
-
-	return nil
 }

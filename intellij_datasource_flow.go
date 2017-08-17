@@ -31,6 +31,10 @@ type IntellijDatasourceFlow struct {
 	credentials *Credentials
 }
 
+func (ds *IntellijDatasourceFlow) Name() string {
+	return "INTELLIJ DATASOURCE"
+}
+
 func (ds *IntellijDatasourceFlow) UpdateWithCredentials(credentials *Credentials) (err error) {
 	_, err = ds.datasourceFile.UpdateUsername(ds.DatabaseUUID, credentials.Username)
 	if err != nil {
@@ -63,19 +67,4 @@ func (ds *IntellijDatasourceFlow) PersistChanges() (err error) {
 	}
 
 	return
-}
-
-// A side effecting function that updates the
-func (ds *IntellijDatasourceFlow) UpdateCredentials(credentials *Credentials) (err error) {
-	err = ds.UpdateWithCredentials(credentials)
-	if err != nil {
-		return
-	}
-
-	err = ds.PersistChanges()
-	if err != nil {
-		return
-	}
-
-	return nil
 }
