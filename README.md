@@ -33,6 +33,7 @@ Note that IntelliJ-specific paths can be found with [this guide to IntelliJ stor
 
 - For best results, close applications before running Amanar. Many applications do not take kindly to their data being modified while they are in use.
 - Do not edit numbers in plists using XCode. XCode will conveniently change your data types for you.
+- A reiteration: back up your data before using this tool. There are no known cases of data loss, but if formats change over time this may occur.
 
 ## Building
 
