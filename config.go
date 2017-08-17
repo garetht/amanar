@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/xeipuuv/gojsonschema"
-	"fmt"
 )
 
 type AmanarConfiguration []AmanarConfigItem

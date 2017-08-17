@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"log"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 )
 
 type IntellijDatabaseUUID string
@@ -18,7 +17,7 @@ func NewIntellijDatasourceFlow(config *IntellijDatasourceConfig) (*IntellijDatas
 
 	return &IntellijDatasourceFlow{
 		IntellijDatasourceConfig: *config,
-		datasourceFile: datasourceFile,
+		datasourceFile:           datasourceFile,
 	}, nil
 }
 
@@ -28,7 +27,7 @@ func NewIntellijDatasourceFlow(config *IntellijDatasourceConfig) (*IntellijDatas
 type IntellijDatasourceFlow struct {
 	IntellijDatasourceConfig
 	datasourceFile *IntellijDatasourceFile
-	credentials *Credentials
+	credentials    *Credentials
 }
 
 func (ds *IntellijDatasourceFlow) Name() string {
@@ -44,7 +43,6 @@ func (ds *IntellijDatasourceFlow) UpdateWithCredentials(credentials *Credentials
 	ds.credentials = credentials
 	return nil
 }
-
 
 func (ds *IntellijDatasourceFlow) PersistChanges() (err error) {
 	// Writing: side-effecting writes to files and forms of IO and things.

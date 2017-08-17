@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/beevik/etree"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 )
 
 // Tested with DataGrip 2017.2

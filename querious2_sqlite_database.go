@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 )
 
 func NewQuerious2SQLiteDatabase(filepath string) (*Querious2SQLiteDatabase, error) {
@@ -27,7 +26,7 @@ func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, username
 		return err
 	}
 
-	_, err = statement.Exec(credentials.Username, databaseUuid)
+	_, err = statement.Exec(username, databaseUuid)
 
 	defer statement.Close()
 

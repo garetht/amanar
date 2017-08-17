@@ -46,14 +46,14 @@ func (qf *Querious2Flow) PersistChanges() (err error) {
 
 	service := fmt.Sprintf("MySQL %s", qf.DatabaseUUID)
 
-	log.Printf("[QUERIOUS2 DATASOURCE %s] Writing new username %s and password %s to Keychain", service, qf.usernameToUpdate, qf.passwordToUpdate)
+	log.Printf("[QUERIOUS2 DATASOURCE %s] Writing new username %s and password %s to Keychain", service, qf.credentials.Username, qf.credentials.Password)
 	// Querious 2 finds its item in the keychain based a hashlike combination of the keychain filepath,
 	// account, and service. We therefore do not alter any of these things./
 	// (connection_settings.keychainItemRefMySQL)
 	err = CreateOrUpdateKeychainEntriesForService(service, "", qf.credentials.Password, []string{})
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[QUERIOUS2 DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, qf.usernameToUpdate, qf.passwordToUpdate)
+		log.Fatalf("[QUERIOUS2 DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, qf.credentials.Username, qf.credentials.Password)
 		return
 	}
 
