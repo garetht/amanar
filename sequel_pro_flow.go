@@ -103,8 +103,12 @@ func (sp *SequelProFlow) PersistChanges() (err error) {
 	if !found {
 		return errors.New("Could not find a matching Sequel Database for that Sequel UUID.")
 	}
-	service := fmt.Sprintf("Sequel Pro : %s (%d)", plistItem.Host, plistItem.Id)
-	log.Printf("[SEQUEL PRO] Persisting username %s and password %s to service %s", plistItem.User, sp.passwordToUpdate, service)
+
+	// These two values need to be synchronized for Sequel Pro to be able to
+	// read the correct keychain value.
+	service := fmt.Sprintf("Sequel Pro : %s (%d)", plistItem.Name, plistItem.Id)
+	account := fmt.Sprintf("%s@%s/%s", plistItem.User, plistItem.Host, plistItem.Database)
+	log.Printf("[SEQUEL PRO] Persisting username %s and password %s to service %s and account %s", plistItem.User, sp.passwordToUpdate, service, account)
 
 	bytes, err := plist.Marshal(sp.plist, SEQUEL_PRO_PLIST_FORMAT)
 	if err != nil {
@@ -113,7 +117,7 @@ func (sp *SequelProFlow) PersistChanges() (err error) {
 
 	ioutil.WriteFile(sp.SequelProPlistPath, bytes, 0644)
 
-	return CreateOrUpdateKeychainEntriesForService(service, "", sp.passwordToUpdate, []string{})
+	return CreateOrUpdateKeychainEntriesForService(service, account, sp.passwordToUpdate, []string{})
 }
 
 func (sp *SequelProFlow) UpdateCredentials(credentials *Credentials) (err error) {
