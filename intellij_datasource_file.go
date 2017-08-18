@@ -33,7 +33,7 @@ type IntellijDatasourceFile struct {
 	Fullpath IntellijDatasourceFilepath
 }
 
-func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, credentials *Credentials) (oldUsername string, err error) {
+func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, newUsername string) (oldUsername string, err error) {
 	component := dc.Document.SelectElement("project").SelectElement("component")
 
 	for _, dataSource := range component.SelectElements("data-source") {
@@ -45,7 +45,7 @@ func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUU
 			}
 
 			oldUsername = username.Text()
-			username.SetText(credentials.Username)
+			username.SetText(newUsername)
 			return oldUsername, nil
 		}
 	}

@@ -43,6 +43,16 @@ The project has been successfully built on Go `1.8.3` on Mac OS 10.12.5. The min
 
 `cgo` is also used to interface with OSX Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
 
+## Developing: Extending
+
+To add support for a new data source, do the following:
+
+1. Create a `struct` that satisfies the `Flower` interface. This will act to parse and change the required information on disk.
+2. Create a configuration `struct` into which JSON will be parsed
+3. Modify the JSON Schema in accordance with the configuration `struct` and document the required parameters.
+4. Add the lines in `ProcessConfigItem` to process the new `Flower` that you have created
+5. Regenerate the binary data (see below) that bundles the schema in the Go binary
+
 ## Developing: Regenerating Bindata
 
 We compile the JSON Schema for the Amanar configuration into the Go binary for convenience.

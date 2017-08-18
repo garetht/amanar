@@ -12,21 +12,17 @@ import (
 // Persist
 
 
-type IntellijRunConfigsFlow struct {
-	IntellijRunConfigurationsConfig
-	NewCredentials *Credentials
-}
-
-func (rc *IntellijRunConfigsFlow) parseRunConfigs() (rcs []*IntellijRunConfig, err error) {
-	files, err := ioutil.ReadDir(rc.RunConfigurationsFolderPath)
+func NewIntellijRunConfigsFlow(config *IntellijRunConfigurationsConfig) (*IntellijRunConfigsFlow, error) {
+	files, err := ioutil.ReadDir(config.RunConfigurationsFolderPath)
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
+	rcs := []*IntellijRunConfig{}
 	for _, file := range files {
 		if name := file.Name(); filepath.Ext(name) == ".xml" && !file.IsDir() {
-			fullPath := filepath.Join(rc.RunConfigurationsFolderPath, name)
+			fullPath := filepath.Join(config.RunConfigurationsFolderPath, name)
 			rc, err := NewIntellijRunConfig(fullPath)
 			if err != nil {
 				log.Printf("[RUN CONFIGS] Could not parse run config %s. Skipping.", fullPath)
@@ -36,21 +32,38 @@ func (rc *IntellijRunConfigsFlow) parseRunConfigs() (rcs []*IntellijRunConfig, e
 		}
 	}
 
-	return
+	return &IntellijRunConfigsFlow{
+		IntellijRunConfigurationsConfig: *config,
+		runConfigurations: rcs,
+	}, nil
 }
 
-func (rc *IntellijRunConfigsFlow) UpdateCredentials() (err error) {
-	runConfigs, err := rc.parseRunConfigs()
+type IntellijRunConfigsFlow struct {
+	IntellijRunConfigurationsConfig
+	credentials *Credentials
+	runConfigurations []*IntellijRunConfig
+}
 
+func (rc *IntellijRunConfigsFlow) Name() string {
+	return "INTELLIJ RUN CONFIGURATION"
+}
+
+func (rc *IntellijRunConfigsFlow) UpdateWithCredentials(credentials *Credentials) (err error) {
+	rc.credentials = credentials
+
+	for _, runConfig := range rc.runConfigurations {
+		runConfig.UpdateEnvironmentVariable(rc.EnvironmentVariable, rc.DatabaseHost, credentials)
+	}
+
+	return nil
+}
+
+func (rc *IntellijRunConfigsFlow) PersistChanges() (err error) {
 	if err != nil {
 		return
 	}
 
-	for _, runConfig := range runConfigs {
-		runConfig.UpdateEnvironmentVariable(rc.EnvironmentVariable, rc.DatabaseHost, rc.NewCredentials)
-	}
-
-	for _, runConfig := range runConfigs {
+	for _, runConfig := range rc.runConfigurations {
 		err = runConfig.WriteToFile()
 		if err != nil {
 			log.Printf("[RUN CONFIGS] Error writing %s to file. Skipping.", runConfig.Fullpath)

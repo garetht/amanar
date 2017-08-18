@@ -17,7 +17,7 @@ type Querious2SQLiteDatabase struct {
 	Filepath string
 }
 
-func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, credentials *Credentials) error {
+func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, username string) error {
 	db, err := sql.Open("sqlite3", qdb.Filepath)
 
 	statement, err := db.Prepare("UPDATE connection_settings SET user=? WHERE uuid=?")
@@ -26,7 +26,7 @@ func (qdb *Querious2SQLiteDatabase) UpdateUsername(databaseUuid string, credenti
 		return err
 	}
 
-	_, err = statement.Exec(credentials.Username, databaseUuid)
+	_, err = statement.Exec(username, databaseUuid)
 
 	defer statement.Close()
 

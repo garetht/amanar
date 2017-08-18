@@ -51,46 +51,59 @@ type PosticoDatasourcesConfig struct {
 }
 
 func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
-	var err error
+	var errs []error
+	var flows []Flower
+
 	for _, datasourceConfig := range configurables.IntellijDatasources {
-		log.Printf("[DATSOURCE CONFIG] Processing datasource config at %s with UUID %s", datasourceConfig.DatasourceFilePath, datasourceConfig.DatabaseUUID)
-		err = processDatasourceConfig(&datasourceConfig, credentials)
+		flow, err := NewIntellijDatasourceFlow(&datasourceConfig)
 		if err != nil {
-			log.Printf("[DATASOURCE CONFIG] Could not process datasource config %#v because %s. Skipping ahead.", datasourceConfig, err)
+			errs = append(errs, err)
+			continue
 		}
+		flows = append(flows, flow)
 	}
 
 	for _, runConfigurationsConfig := range configurables.IntellijRunConfigurations {
-		log.Printf("[RUN CONFIGURATIONS CONFIG] Processing run configurations config at %s", runConfigurationsConfig.RunConfigurationsFolderPath)
-		err = processRunConfigurationsConfig(&runConfigurationsConfig, credentials)
+		flow, err := NewIntellijRunConfigsFlow(&runConfigurationsConfig)
 		if err != nil {
-			log.Printf("[RUN CONFIGURATIONS CONFIG] Could not process run configurations config %#v because %s. Skipping ahead.", runConfigurationsConfig, err)
+			errs = append(errs, err)
+			continue
 		}
+		flows = append(flows, flow)
 	}
 
 	for _, querious2Config := range configurables.Querious2Datasources {
-		log.Printf("[QUERIOUS 2 CONFIG] Processing Querious 2 SQLite database at %s", querious2Config.Querious2SQLitePath)
-		err = processQuerious2Config(&querious2Config, credentials)
+		flow, err := NewQuerious2Flow(&querious2Config)
 		if err != nil {
-			log.Printf("[QUERIOUS 2 CONFIG] Could not process Querious 2 %#v because %s. Skipping ahead.", querious2Config, err)
+			errs = append(errs, err)
+			continue
 		}
-	}
+		flows = append(flows, flow)	}
 
 	for _, sequelProConfig := range configurables.SequelProDatasources {
-		log.Printf("[SEQUEL PRO CONFIG] Processing Sequel Pro Plist file at %s", sequelProConfig.SequelProPlistPath)
-		err = processSequelProConfig(&sequelProConfig, credentials)
+		flow, err := NewSequelProFlow(&sequelProConfig)
 		if err != nil {
-			log.Printf("[SEQUEL PRO CONFIG] Could not process Sequel Pro %#v because %s. Skipping ahead.", sequelProConfig, err)
+			errs = append(errs, err)
+			continue
 		}
+		flows = append(flows, flow)
 	}
 
 	for _, posticoConfig := range configurables.PosticoDatasources {
-		log.Printf("[POSTICO CONFIG] Processing Postico Plist file at %s", posticoConfig.PosticoSQLitePath)
-		err = processPosticoConfig(&posticoConfig, credentials)
+		flow, err := NewPosticoFlow(&posticoConfig)
 		if err != nil {
-			log.Printf("[POSTICO CONFIG] Could not process Postico %#v because %s. Skipping ahead.", posticoConfig, err)
+			errs = append(errs, err)
+			continue
 		}
+		flows = append(flows, flow)
 	}
+
+	if len(errs) > 0 {
+		log.Printf("[FLOW PROCESSING] Encountered errors processing flows: %#v. Processing flows that worked.", errs)
+	}
+
+	UpdateCredentials(flows, credentials)
+
 	return
 }
 
@@ -127,46 +140,22 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 	return
 }
 
-func processDatasourceConfig(datasourceConfig *IntellijDatasourceConfig, credentials *Credentials) error {
-	flow := IntellijDatasourceFlow{
-		IntellijDatasourceConfig: *datasourceConfig,
-		NewCredentials:           credentials,
+func UpdateCredentials(flows []Flower, credentials *Credentials) {
+	var err error
+	for _, flow := range flows {
+		log.Printf("[%s] Beginning to update flow %#v with credentials %s", flow.Name(), flow, credentials)
+
+		err = flow.UpdateWithCredentials(credentials)
+		if err != nil {
+			log.Printf("[%s] Error when performing non-write update to flow %#v with credentials %s. Will not try and persist externally. Skipping ahead to next flow.", flow.Name(), flow, credentials)
+			log.Print(err)
+			continue
+		}
+
+		err = flow.PersistChanges()
+		if err != nil {
+			log.Printf("[%s] Error when persisting changes to to flow %#v with credentials %s. Skipping ahead to next flow.", flow.Name(), flow, credentials)
+			log.Print(err)
+		}
 	}
-	return flow.UpdateCredentials()
-}
-
-func processRunConfigurationsConfig(runConfigurationsConfig *IntellijRunConfigurationsConfig, credentials *Credentials) error {
-	flow := IntellijRunConfigsFlow{
-		IntellijRunConfigurationsConfig: *runConfigurationsConfig,
-		NewCredentials:                  credentials,
-	}
-
-	return flow.UpdateCredentials()
-}
-
-func processQuerious2Config(querious2Config *Querious2DatasourcesConfig, credentials *Credentials) error {
-	flow := Querious2Flow{
-		Querious2DatasourcesConfig: *querious2Config,
-		NewCredentials:             credentials,
-	}
-
-	return flow.UpdateCredentials()
-}
-
-func processSequelProConfig(sequelProConfig *SequelProDatasourcesConfig, credentials *Credentials) error {
-	flow, err := NewSequelProFlow(sequelProConfig)
-	if err != nil {
-		return err
-	}
-
-	return flow.UpdateCredentials(credentials)
-}
-
-func processPosticoConfig(posticoConfig *PosticoDatasourcesConfig, credentials *Credentials) error {
-	flow, err := NewPosticoFlow(posticoConfig)
-	if err != nil {
-		return err
-	}
-
-	return flow.UpdateCredentials(credentials)
 }
