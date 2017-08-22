@@ -8,11 +8,11 @@
         "type": "object",
         "properties": {
             "vault_path": {
-                "description": "The path representing the datastore in the Vault.",
+                "description": "The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
                 "type": "string"
             },
             "vault_role": {
-                "description": "The role representing the permissions that are sought to the Vault datastore.",
+                "description": "The role representing the permissions that are sought to the Vault datastore. This is equivalent to $VAULT_ROLE in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
                 "type": "string"
             },
             "configurables": {
@@ -28,7 +28,7 @@
                             "type": "object",
                             "properties": {
                                 "datasource_file_path": {
-                                    "description": "The path to IntelliJ data sources file. This file usually is named dataSources.local.xml.",
+                                    "description": "The path to IntelliJ data sources file. The file is typically called dataSources.local.xml.",
                                     "type": "string"
                                 },
                                 "trusted_applications": {
@@ -82,7 +82,7 @@
                             "type": "object",
                             "properties": {
                                 "querious2_sqlite_path": {
-                                    "description": "Path to the SQLite database in which Querious 2 stores its data.",
+                                    "description": "Path to the SQLite database in which Querious 2 stores its data. The file is typically called Connections.sqlite.",
                                     "type": "string"
                                 },
                                 "database_uuid": {
@@ -103,7 +103,7 @@
                             "type": "object",
                             "properties": {
                                 "sequel_pro_plist_path": {
-                                    "description": "Path to the plist in which Sequel Pro stores its data. Typically called Favorites.plist",
+                                    "description": "Path to the plist in which Sequel Pro stores its data. The file is typically called Favorites.plist",
                                     "type": "string"
                                 },
                                 "database_uuid": {
@@ -124,7 +124,7 @@
                             "type": "object",
                             "properties": {
                                 "postico_sqlite_path": {
-                                    "description": "Path to the SQLite database in which Postico stores its data.",
+                                    "description": "Path to the SQLite database in which Postico stores its data. The file is typically called ConnectionFavorites.db",
                                     "type": "string"
                                 },
                                 "database_uuid": {
