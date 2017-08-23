@@ -5,10 +5,12 @@ import (
 	"os"
 )
 
+
 func main() {
 	executeAmanar()
 }
 
+//go:generate go-bindata amanar_config_schema.json
 func executeAmanar() {
 	configItems, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
 
