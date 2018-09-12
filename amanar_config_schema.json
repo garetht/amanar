@@ -155,16 +155,11 @@
             "items": {
               "type": "object",
               "required": [
-                "language",
                 "username_variable",
                 "password_variable",
                 "script_path"
               ],
               "properties": {
-                "language": {
-                  "description": "The shell scripting language to generate the shell script in.",
-                  "enum": ["bash"]
-                },
                 "script_path": {
                   "description": "The path the shell script should be generated to.",
                   "type": "string",

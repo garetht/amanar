@@ -62,14 +62,7 @@ type SequelProDatasource struct {
 }
 
 type ShellDatasource struct {
-	Language         Language `json:"language"`         // The shell scripting language to generate the shell script in.
-	PasswordVariable string   `json:"password_variable"`// The name of the environment variable that should contain the password
-	ScriptPath       string   `json:"script_path"`      // The path the shell script should be generated to.
-	UsernameVariable string   `json:"username_variable"`// The name of the environment variable that should contain the username
+	PasswordVariable string `json:"password_variable"`// The name of the environment variable that should contain the password
+	ScriptPath       string `json:"script_path"`      // The path the shell script should be generated to.
+	UsernameVariable string `json:"username_variable"`// The name of the environment variable that should contain the username
 }
-
-// The shell scripting language to generate the shell script in.
-type Language string
-const (
-	Bash Language = "bash"
-)
