@@ -12,6 +12,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - Querious 2
 - Sequel Pro (tested with 1.1.1)
 - Postico (tested with 1.2.2)
+- Shell script environment variable exports (tested with Bash)
 
 ## Usage
 
