@@ -1,29 +1,26 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"log"
 )
 
 func NewShellFlow(config *ShellDatasource) (*ShellFlow, error) {
-	file, err := os.Open(config.ScriptPath)
-	defer file.Close()
+	parsedFile, err := NewShellFile(config.ScriptPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not open and parse shell file path '%s': %s", config.ScriptPath, err)
 	}
 
 	return &ShellFlow{
 		ShellDatasource: *config,
-		scriptFile: file,
+		parsedFile:      parsedFile,
 	}, nil
 }
 
 type ShellFlow struct {
 	ShellDatasource
-	scriptFile  *os.File
 	credentials *Credentials
-	contents string
+	parsedFile  *ShellFile
 }
 
 func (sf *ShellFlow) Name() string {
@@ -31,20 +28,16 @@ func (sf *ShellFlow) Name() string {
 }
 
 func (sf *ShellFlow) UpdateWithCredentials(credentials *Credentials) error {
+	log.Printf("[%s DATASOURCE] Updating parsed shell AST %s with new username %s and password %s", sf.Name(), sf.ScriptPath, credentials.Username, credentials.Password)
+	sf.parsedFile.UpdateCredentials(sf.UsernameVariable, sf.PasswordVariable, credentials)
 	sf.credentials = credentials
-	// TODO: if multiple language support is needed, create an if statement
-	// here switching on Language
-	sf.contents = fmt.Sprintf("export %s=%s\nexport %s=%s", sf.UsernameVariable, sf.credentials.Username, sf.PasswordVariable, sf.credentials.Password)
-
+	log.Printf("[%s DATASOURCE] Updated parsed shell AST %s with new username %s and password %s", sf.Name(), sf.ScriptPath, credentials.Username, credentials.Password)
 	return nil
 }
 
 func (sf *ShellFlow) PersistChanges() error {
-	log.Printf("[%s DATASOURCE] Writing new username %s and password %s to environment variable file", sf.Name(), sf.credentials.Username, sf.credentials.Password)
-	_, err := sf.scriptFile.WriteString(sf.contents)
-	if err != nil {
-		return err
-	}
-
+	log.Printf("[%s DATASOURCE] Writing new username %s and password %s to shell script file", sf.Name(), sf.credentials.Username, sf.credentials.Password)
+	sf.parsedFile.WriteToDisk()
+	log.Printf("[%s DATASOURCE] Successfully wrote new username %s and password %s to shell script file", sf.Name(), sf.credentials.Username, sf.credentials.Password)
 	return nil
 }

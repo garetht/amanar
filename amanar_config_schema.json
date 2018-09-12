@@ -9,11 +9,13 @@
     "properties": {
       "vault_path": {
         "description": "The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       },
       "vault_role": {
         "description": "The role representing the permissions that are sought to the Vault datastore. This is equivalent to $VAULT_ROLE in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       },
       "configurables": {
         "type": "object",
@@ -30,18 +32,21 @@
               "properties": {
                 "datasource_file_path": {
                   "description": "The path to IntelliJ data sources file. The file is typically called dataSources.local.xml.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "trusted_applications": {
                   "description": "If the Keychain entries you want to create already exist, this is unnecessary. A list of full paths to applications to allow the Keychain to trust to reduce the number of permissions prompts. This path should end in .app.",
                   "items": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1
                   },
                   "type": "array"
                 },
                 "database_uuid": {
                   "description": "The IntelliJ UUID for the database you want to update. You can find this by examining the dataSources.local.xml file.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -59,15 +64,18 @@
               "properties": {
                 "run_configurations_folder_path": {
                   "description": "A directory containing all IntelliJ run configurations to be examined. Usually located in .idea/runConfigurations. Run configurations may need to be shared before becoming visible in this folder.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "environment_variable": {
                   "description": "The environment variable in the run configuration under which the database connection",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "database_host": {
                   "description": "The username and password for the URL will only be updated if the host of URL in the environment variable matches this string.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -84,11 +92,13 @@
               "properties": {
                 "querious2_sqlite_path": {
                   "description": "Path to the SQLite database in which Querious 2 stores its data. The file is typically called Connections.sqlite.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "database_uuid": {
                   "description": "The unique identifier for the Querious database to update. Can be found by looking in the SQLite database.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -105,11 +115,13 @@
               "properties": {
                 "sequel_pro_plist_path": {
                   "description": "Path to the plist in which Sequel Pro stores its data. The file is typically called Favorites.plist",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "database_uuid": {
                   "description": "The unique identifier for the Sequel Pro database to update. Can be found by looking in the plist.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -126,11 +138,13 @@
               "properties": {
                 "postico_sqlite_path": {
                   "description": "Path to the SQLite database in which Postico stores its data. The file is typically called ConnectionFavorites.db",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "database_uuid": {
                   "description": "The unique identifier for the Postico database to update. Can be found by looking in the SQLite database.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -149,20 +163,22 @@
               "properties": {
                 "language": {
                   "description": "The shell scripting language to generate the shell script in.",
-                  "type": "string",
                   "enum": ["bash"]
                 },
                 "script_path": {
                   "description": "The path the shell script should be generated to.",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "username_variable": {
                   "description": "The name of the environment variable that should contain the username",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "password_variable": {
                   "description": "The name of the environment variable that should contain the password",
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }

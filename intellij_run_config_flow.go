@@ -12,7 +12,7 @@ import (
 // Persist
 
 
-func NewIntellijRunConfigsFlow(config *IntellijRunConfigurations) (*IntellijRunConfigsFlow, error) {
+func NewIntellijRunConfigsFlow(config *IntellijRunConfiguration) (*IntellijRunConfigsFlow, error) {
 	files, err := ioutil.ReadDir(config.RunConfigurationsFolderPath)
 
 	if err != nil {
@@ -33,13 +33,13 @@ func NewIntellijRunConfigsFlow(config *IntellijRunConfigurations) (*IntellijRunC
 	}
 
 	return &IntellijRunConfigsFlow{
-		IntellijRunConfigurations: *config,
+		IntellijRunConfiguration: *config,
 		runConfigurations:         rcs,
 	}, nil
 }
 
 type IntellijRunConfigsFlow struct {
-	IntellijRunConfigurations
+	IntellijRunConfiguration
 	credentials *Credentials
 	runConfigurations []*IntellijRunConfig
 }

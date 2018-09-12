@@ -65,7 +65,9 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	}
 
 	if len(errs) > 0 {
-		log.Printf("[FLOW PROCESSING] Encountered errors processing flows: %#v. Processing flows that worked.", errs)
+		for _, err := range errs {
+			log.Printf("[FLOW PROCESSING] Encountered errors processing flow: %#v. Processing flows that worked.", err)
+		}
 	}
 
 	UpdateCredentials(flows, credentials)

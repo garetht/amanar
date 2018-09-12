@@ -59,9 +59,7 @@ We use quicktype to generate the configuration types from the provided JSON sche
 
 To regenerate the types, run `quicktype -s schema amanar_config_schema.json -o amanar_configuration.go`.
 
-
 To regenerate this file when the data is updated, run `go generate`.
-
 
 ## Developing: Regenerating Bindata
 

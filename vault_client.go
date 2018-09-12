@@ -9,8 +9,6 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
-type VaultPath string
-type VaultRole string
 
 type GithubLoginBody struct {
 	Token string `json:"token"`
@@ -52,7 +50,7 @@ func (vc *VaultGithubAuthClient) loginWithGithub() error {
 	return nil
 }
 
-func (vc *VaultGithubAuthClient) getCredential(vaultPath VaultPath, vaultRole VaultRole) (*api.Secret, error) {
+func (vc *VaultGithubAuthClient) getCredential(vaultPath, vaultRole string) (*api.Secret, error) {
 	if vc.vaultClient == nil || vc.vaultClient.Token() == "" {
 		return nil, errors.New("Vault Github client has not yet been intialized with a token. Please log in.")
 	}

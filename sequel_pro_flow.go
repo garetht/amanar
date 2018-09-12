@@ -45,7 +45,7 @@ type SequelProPlistItem struct {
 	User                              string `plist:"user"`
 }
 
-func NewSequelProFlow(config *SequelProDatasources) (spf *SequelProFlow, err error) {
+func NewSequelProFlow(config *SequelProDatasource) (spf *SequelProFlow, err error) {
 	bytes, err := ioutil.ReadFile(config.SequelProPlistPath)
 	if err != nil {
 		return
@@ -58,13 +58,13 @@ func NewSequelProFlow(config *SequelProDatasources) (spf *SequelProFlow, err err
 	}
 
 	return &SequelProFlow{
-		SequelProDatasources: *config,
+		SequelProDatasource: *config,
 		plist:                sequelPlist,
 	}, nil
 }
 
 type SequelProFlow struct {
-	SequelProDatasources
+	SequelProDatasource
 	plist       SequelProRootPlist
 	credentials *Credentials
 }
