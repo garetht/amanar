@@ -5,20 +5,20 @@ import (
 	"log"
 )
 
-func NewPosticoFlow(config *PosticoDatasourcesConfig) (*PosticoFlow, error) {
-	database, err := NewPosticoSQLiteDatabase(config.PosticoSQLitePath)
+func NewPosticoFlow(config *PosticoDatasource) (*PosticoFlow, error) {
+	database, err := NewPosticoSQLiteDatabase(config.PosticoSqlitePath)
 	if err != nil {
 		return nil, err
 	}
 
 	return &PosticoFlow{
-		PosticoDatasourcesConfig: *config,
-		database:                 database,
+		PosticoDatasource: *config,
+		database:           database,
 	}, nil
 }
 
 type PosticoFlow struct {
-	PosticoDatasourcesConfig
+	PosticoDatasource
 	database    *PosticoSQLiteDatabase
 	credentials *Credentials
 }
@@ -49,14 +49,14 @@ func (pf *PosticoFlow) PersistChanges() (err error) {
 	}
 
 	service := fmt.Sprintf("postgresql://%s", host)
-	log.Printf("[POSTICO DATASOURCE %s] Writing new username %s and password %s to Keychain", service, pf.credentials.Username, pf.credentials.Password)
+	log.Printf("[%s DATASOURCE %s] Writing new username %s and password %s to Keychain", pf.Name(), service, pf.credentials.Username, pf.credentials.Password)
 	// Querious 2 finds its item in the keychain based a hashlike combination of the keychain filepath,
 	// account, and service. We therefore do not alter any of these things./
 	// (connection_settings.keychainItemRefMySQL)
 	err = CreateOrUpdateKeychainEntriesForService(service, pf.credentials.Username, pf.credentials.Password, []string{})
 	if err != nil {
 		log.Print(err)
-		log.Fatalf("[POSTICO DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", service, pf.credentials.Username, pf.credentials.Password)
+		log.Fatalf("[%s DATASOURCE %s] Could not create the new keychain entry with username %s and password %s", pf.Name(), service, pf.credentials.Username, pf.credentials.Password)
 		return
 	}
 

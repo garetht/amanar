@@ -1,56 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 
 	"github.com/xeipuuv/gojsonschema"
 )
 
-type AmanarConfiguration []AmanarConfigItem
-
-type AmanarConfigItem struct {
-	VaultPath     VaultPath           `json:"vault_path"`
-	VaultRole     VaultRole           `json:"vault_role"`
-	Configurables AmanarConfigurables `json:"configurables"`
-}
-
-type AmanarConfigurables struct {
-	IntellijDatasources       []IntellijDatasourceConfig        `json:"intellij_datasources"`
-	IntellijRunConfigurations []IntellijRunConfigurationsConfig `json:"intellij_run_configurations"`
-	Querious2Datasources      []Querious2DatasourcesConfig      `json:"querious2_datasources"`
-	SequelProDatasources      []SequelProDatasourcesConfig      `json:"sequel_pro_datasources"`
-	PosticoDatasources        []PosticoDatasourcesConfig        `json:"postico_datasources"`
-}
-
-type IntellijDatasourceConfig struct {
-	DatasourceFilePath IntellijDatasourceFilepath `json:"datasource_file_path"`
-	DatabaseUUID       IntellijDatabaseUUID       `json:"database_uuid"`
-}
-
-type IntellijRunConfigurationsConfig struct {
-	RunConfigurationsFolderPath string `json:"run_configurations_folder_path"`
-	EnvironmentVariable         string `json:"environment_variable"`
-	DatabaseHost                string `json:"database_host"`
-}
-
-type Querious2DatasourcesConfig struct {
-	Querious2SQLitePath string `json:"querious2_sqlite_path"`
-	DatabaseUUID        string `json:"database_uuid"`
-}
-
-type SequelProDatasourcesConfig struct {
-	SequelProPlistPath string `json:"sequel_pro_plist_path"`
-	DatabaseUUID       string `json:"database_uuid"`
-}
-
-type PosticoDatasourcesConfig struct {
-	PosticoSQLitePath string `json:"postico_sqlite_path"`
-	DatabaseUUID      string `json:"database_uuid"`
-}
-
-func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credentials) {
+func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	var errs []error
 	var flows []Flower
 
@@ -98,6 +55,15 @@ func ProcessConfigItem(configurables *AmanarConfigurables, credentials *Credenti
 		flows = append(flows, flow)
 	}
 
+	for _, shellConfig := range configurables.ShellDatasources {
+		flow, err := NewShellFlow(&shellConfig)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		flows = append(flows, flow)
+	}
+
 	if len(errs) > 0 {
 		log.Printf("[FLOW PROCESSING] Encountered errors processing flows: %#v. Processing flows that worked.", errs)
 	}
@@ -132,7 +98,7 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 		return
 	}
 
-	err = json.Unmarshal(bytes, &c)
+	c, err = UnmarshalAmanarConfiguration(bytes)
 	if err != nil {
 		return
 	}

@@ -48,10 +48,20 @@ The project has been successfully built on Go `1.8.3` on Mac OS 10.12.5. The min
 To add support for a new data source, do the following:
 
 1. Create a `struct` that satisfies the `Flower` interface. This will act to parse and change the required information on disk.
-2. Create a configuration `struct` into which JSON will be parsed
-3. Modify the JSON Schema in accordance with the configuration `struct` and document the required parameters.
-4. Add the lines in `ProcessConfigItem` to process the new `Flower` that you have created
-5. Regenerate the binary data (see below) that bundles the schema in the Go binary
+2. Modify the JSON Schema in accordance with the configuration `struct` and document the required parameters.
+3. Regenerate the binary data (see below) that bundles the schema in the Go binary
+4. Regenerate the configuration types (see below) from the JSON schema to allow Go to parse the schema.
+5. Add the lines in `ProcessConfigItem` to process the new `Flower` that you have created
+
+## Developing: Regenerating Configuration Struct types
+
+We use quicktype to generate the configuration types from the provided JSON schema. Quicktype can be installed from NPM with `npm install -g quicktype`.
+
+To regenerate the types, run `quicktype -s schema amanar_config_schema.json -o amanar_configuration.go`.
+
+
+To regenerate this file when the data is updated, run `go generate`.
+
 
 ## Developing: Regenerating Bindata
 

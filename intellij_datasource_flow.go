@@ -6,18 +6,15 @@ import (
 	"log"
 )
 
-type IntellijDatabaseUUID string
-type IntellijDatasourceFilepath string
-
-func NewIntellijDatasourceFlow(config *IntellijDatasourceConfig) (*IntellijDatasourceFlow, error) {
+func NewIntellijDatasourceFlow(config *IntellijDatasource) (*IntellijDatasourceFlow, error) {
 	datasourceFile, err := NewIntellijDatasourceFile(config.DatasourceFilePath)
 	if err != nil {
 		return nil, err
 	}
 
 	return &IntellijDatasourceFlow{
-		IntellijDatasourceConfig: *config,
-		datasourceFile:           datasourceFile,
+		IntellijDatasource: *config,
+		datasourceFile:     datasourceFile,
 	}, nil
 }
 
@@ -25,7 +22,7 @@ func NewIntellijDatasourceFlow(config *IntellijDatasourceConfig) (*IntellijDatas
 // and password for a single database with a particular IntelliJ UUID.
 // It does this by using dataSources.local.xml files.
 type IntellijDatasourceFlow struct {
-	IntellijDatasourceConfig
+	IntellijDatasource
 	datasourceFile *IntellijDatasourceFile
 	credentials    *Credentials
 }
