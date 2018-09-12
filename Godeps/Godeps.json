@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/garetht/amanar",
-	"GoVersion": "go1.8.3",
+	"GoVersion": "go1.9.1",
 	"Deps": [
 		{
 			"ImportPath": "github.com/DHowett/go-plist",
@@ -125,6 +125,11 @@
 			"Rev": "6654e412c3c7eabb310d920cf73a2102dbf8c632"
 		},
 		{
+			"ImportPath": "github.com/mvdan/sh/syntax",
+			"Comment": "v2.5.0-41-g09fe3e0",
+			"Rev": "09fe3e0538c045b4601419241d6ca94eb67c74f0"
+		},
+		{
 			"ImportPath": "github.com/xeipuuv/gojsonpointer",
 			"Rev": "6fe8760cad3569743d51ddbb243b26f8456742dc"
 		},
@@ -135,10 +140,6 @@
 		{
 			"ImportPath": "github.com/xeipuuv/gojsonschema",
 			"Rev": "0c8571ac0ce161a5feb57375a9cdf148c98c0f70"
-		},
-		{
-			"ImportPath": "golang.org/x/net/context",
-			"Rev": "7dbad50ab5b31073856416cdcfeb2796d682f844"
 		}
 	]
 }
