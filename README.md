@@ -38,6 +38,10 @@ Note that IntelliJ-specific paths can be found with [this guide to IntelliJ stor
 
 ## Building
 
+### Dependencies
+
+Dependencies are managed by `dep`. Create a `pkgset` with `gvm pkgset create amanar`, then switch to it with `gvm pkgset use amanar`. The pre-GVM `GOPATH` should be added to the `GOPATH` of `gvm pkgenv amanar`. The `/bin` directory may be `PATH`. `dep ensure` should be run to install dependencies. Finally, run `go install` to build the binary.
+
 This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
 
 The project has been successfully built on Go `1.8.3` on Mac OS 10.12.5. The mininum possible Go version required is `1.8.1`.
