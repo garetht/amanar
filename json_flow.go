@@ -47,10 +47,11 @@ func (sf *JSONFlow) UpdateWithCredentials(credentials *Credentials) error {
 	sf.credentials = credentials
 
 	found := false
-	for _, entry := range sf.parsedFile {
+
+	for i, entry := range sf.parsedFile {
 		if entry.Identifier == sf.Identifier {
-			entry.Username = credentials.Username
-			entry.Password = credentials.Password
+			sf.parsedFile[i].Username = credentials.Username
+			sf.parsedFile[i].Password = credentials.Password
 			found = true
 		}
 	}
