@@ -10,9 +10,38 @@ func main() {
 	executeAmanar()
 }
 
+func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
+	ghc := &VaultGithubAuthClient{
+		GithubToken: githubToken,
+		VaultAddress: ce.VaultAddress,
+	}
+	err := ghc.loginWithGithub()
+	if err != nil {
+		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
+		return
+	}
+
+	for _, configItem := range ce.VaultConfiguration {
+		secret, err := ghc.getCredential(configItem.VaultPath, configItem.VaultRole)
+		if err != nil {
+			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
+			continue
+		}
+
+		credentials, err := CreateCredentialsFromSecret(secret)
+
+		if err != nil {
+			log.Printf("[VAULT AUTH] Could not convert Vault secret into Amanar credentials because %s. Skipping.", err)
+			continue
+		}
+
+		ProcessConfigItem(&configItem.Configurables, credentials)
+	}
+}
+
 //go:generate go-bindata amanar_config_schema.json
 func executeAmanar() {
-	configItems, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
+	configurationElements, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
 
 	if err != nil {
 		log.Fatalf("[CONFIG] Could not load configuration file: %s", err)
@@ -33,29 +62,7 @@ func executeAmanar() {
 		return
 	}
 
-	ghc := &VaultGithubAuthClient{
-		GithubToken: githubToken,
-	}
-	err = ghc.loginWithGithub()
-	if err != nil {
-		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
-		return
-	}
-
-	for _, configItem := range configItems {
-		secret, err := ghc.getCredential(configItem.VaultPath, configItem.VaultRole)
-		if err != nil {
-			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
-			continue
-		}
-
-		credentials, err := CreateCredentialsFromSecret(secret)
-
-		if err != nil {
-			log.Printf("[VAULT AUTH] Could not convert Vault secret into Amanar credentials because %s. Skipping.", err)
-			continue
-		}
-
-		ProcessConfigItem(&configItem.Configurables, credentials)
+	for _, configurationElement := range configurationElements {
+		processVaultAddress(githubToken, configurationElement)
 	}
 }

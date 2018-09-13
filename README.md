@@ -17,15 +17,19 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 
 ## Usage
 
-The usage of this program depends on three environment variables:
+The usage of this program depends on two environment variables:
 
-- *VAULT_ADDR*, specifying which Vault server to connect to so that credentials can be retrieved
 - *GITHUB_TOKEN*, specifying the personal Github token which will allow refreshed Vault credentials to be retrieved
 - *CONFIG_FILEPATH*, specifying the location of your configuration file
 
 The program makes certain assumptions about the state of your keychain and configuration files. It cannot be used to create new keychain or configuration entries, only update them. In addition, there should be only one keychain entry per unique identifier (usually the database UUID) so that the correct keychain item to update can be selected without reference to a particular user account.
 
+Multiple vault addresses may now be specified in your configuration file.
+
 ## Configuration
+
+**An Overview of the Schema**
+![](https://cl.ly/6a4a1f269ba8/Screen%20Shot%202018-09-13%20at%2012.03.19%20AM.png)
 
 The configuration file that must be provided is a JSON file conforming to the JSON Schema set forth in `amanar_config_schema.json`. Information on each of the options is given as the `description` attribute in the schema.
 

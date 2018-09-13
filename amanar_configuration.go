@@ -20,6 +20,13 @@ func (r *AmanarConfiguration) Marshal() ([]byte, error) {
 }
 
 type AmanarConfigurationElement struct {
+	VaultAddress       string               `json:"vault_address"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
+	VaultConfiguration []VaultConfiguration `json:"vault_configuration"`
+}
+
+// A list of vault roles and paths and configuration options for output to data sources
+// within a particular vault environment.
+type VaultConfiguration struct {
 	Configurables Configurables `json:"configurables"`
 	VaultPath     string        `json:"vault_path"`   // The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in; the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.
 	VaultRole     string        `json:"vault_role"`   // The role representing the permissions that are sought to the Vault datastore. This is; equivalent to $VAULT_ROLE in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.

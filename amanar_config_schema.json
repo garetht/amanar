@@ -1,211 +1,229 @@
 {
+  "type": "array",
   "items": {
-    "required": [
-      "configurables",
-      "vault_path",
-      "vault_role"
-    ],
     "type": "object",
     "additionalProperties": false,
+    "required": ["vault_address", "vault_configuration"],
     "properties": {
-      "vault_path": {
-        "description": "The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
+      "vault_address": {
+        "description": "The address to a particular vault. Vault addresses usually differ for different environments. For example, we may have one vault address for production and another for staging.",
         "type": "string",
+        "format": "uri",
         "minLength": 1
       },
-      "vault_role": {
-        "description": "The role representing the permissions that are sought to the Vault datastore. This is equivalent to $VAULT_ROLE in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
-        "type": "string",
-        "minLength": 1
-      },
-      "configurables": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "intellij_datasources": {
-            "type": "array",
-            "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
-            "items": {
+      "vault_configuration": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "A list of vault roles and paths and configuration options for output to data sources within a particular vault environment.",
+          "required": [
+            "configurables",
+            "vault_path",
+            "vault_role"
+          ],
+          "properties": {
+            "vault_path": {
+              "description": "The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
+              "type": "string",
+              "minLength": 1
+            },
+            "vault_role": {
+              "description": "The role representing the permissions that are sought to the Vault datastore. This is equivalent to $VAULT_ROLE in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
+              "type": "string",
+              "minLength": 1
+            },
+            "configurables": {
               "type": "object",
               "additionalProperties": false,
-              "required": [
-                "database_uuid",
-                "datasource_file_path"
-              ],
               "properties": {
-                "datasource_file_path": {
-                  "description": "The path to IntelliJ data sources file. The file is typically called dataSources.local.xml.",
-                  "type": "string",
-                  "minLength": 1
-                },
-                "trusted_applications": {
-                  "description": "If the Keychain entries you want to create already exist, this is unnecessary. A list of full paths to applications to allow the Keychain to trust to reduce the number of permissions prompts. This path should end in .app.",
+                "intellij_datasources": {
+                  "type": "array",
+                  "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
                   "items": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "type": "array"
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "database_uuid",
+                      "datasource_file_path"
+                    ],
+                    "properties": {
+                      "datasource_file_path": {
+                        "description": "The path to IntelliJ data sources file. The file is typically called dataSources.local.xml.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "trusted_applications": {
+                        "description": "If the Keychain entries you want to create already exist, this is unnecessary. A list of full paths to applications to allow the Keychain to trust to reduce the number of permissions prompts. This path should end in .app.",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "type": "array"
+                      },
+                      "database_uuid": {
+                        "description": "The IntelliJ UUID for the database you want to update. You can find this by examining the dataSources.local.xml file.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "database_uuid": {
-                  "description": "The IntelliJ UUID for the database you want to update. You can find this by examining the dataSources.local.xml file.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "intellij_run_configurations": {
-            "type": "array",
-            "description": "Allows changes to database access credentials within IntelliJ run configurations.",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "environment_variable",
-                "run_configurations_folder_path",
-                "database_host"
-              ],
-              "properties": {
-                "run_configurations_folder_path": {
-                  "description": "A directory containing all IntelliJ run configurations to be examined. Usually located in .idea/runConfigurations. Run configurations may need to be shared before becoming visible in this folder.",
-                  "type": "string",
-                  "minLength": 1
+                "intellij_run_configurations": {
+                  "type": "array",
+                  "description": "Allows changes to database access credentials within IntelliJ run configurations.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "environment_variable",
+                      "run_configurations_folder_path",
+                      "database_host"
+                    ],
+                    "properties": {
+                      "run_configurations_folder_path": {
+                        "description": "A directory containing all IntelliJ run configurations to be examined. Usually located in .idea/runConfigurations. Run configurations may need to be shared before becoming visible in this folder.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "environment_variable": {
+                        "description": "The environment variable in the run configuration under which the database connection",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "database_host": {
+                        "description": "The username and password for the URL will only be updated if the host of URL in the environment variable matches this string.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "environment_variable": {
-                  "description": "The environment variable in the run configuration under which the database connection",
-                  "type": "string",
-                  "minLength": 1
+                "querious2_datasources": {
+                  "type": "array",
+                  "description": "Allows changes to database access credentials stored in a Querious 2 SQLite database.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "querious2_sqlite_path",
+                      "database_uuid"
+                    ],
+                    "properties": {
+                      "querious2_sqlite_path": {
+                        "description": "Path to the SQLite database in which Querious 2 stores its data. The file is typically called Connections.sqlite.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "database_uuid": {
+                        "description": "The unique identifier for the Querious database to update. Can be found by looking in the SQLite database.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "database_host": {
-                  "description": "The username and password for the URL will only be updated if the host of URL in the environment variable matches this string.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "querious2_datasources": {
-            "type": "array",
-            "description": "Allows changes to database access credentials stored in a Querious 2 SQLite database.",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "querious2_sqlite_path",
-                "database_uuid"
-              ],
-              "properties": {
-                "querious2_sqlite_path": {
-                  "description": "Path to the SQLite database in which Querious 2 stores its data. The file is typically called Connections.sqlite.",
-                  "type": "string",
-                  "minLength": 1
+                "sequel_pro_datasources": {
+                  "type": "array",
+                  "description": "Allows changes to database access credentials for Sequel Pro plists.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "sequel_pro_plist_path",
+                      "database_uuid"
+                    ],
+                    "properties": {
+                      "sequel_pro_plist_path": {
+                        "description": "Path to the plist in which Sequel Pro stores its data. The file is typically called Favorites.plist",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "database_uuid": {
+                        "description": "The unique identifier for the Sequel Pro database to update. Can be found by looking in the plist.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "database_uuid": {
-                  "description": "The unique identifier for the Querious database to update. Can be found by looking in the SQLite database.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "sequel_pro_datasources": {
-            "type": "array",
-            "description": "Allows changes to database access credentials for Sequel Pro plists.",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "sequel_pro_plist_path",
-                "database_uuid"
-              ],
-              "properties": {
-                "sequel_pro_plist_path": {
-                  "description": "Path to the plist in which Sequel Pro stores its data. The file is typically called Favorites.plist",
-                  "type": "string",
-                  "minLength": 1
+                "postico_datasources": {
+                  "type": "array",
+                  "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "postico_sqlite_path",
+                      "database_uuid"
+                    ],
+                    "properties": {
+                      "postico_sqlite_path": {
+                        "description": "Path to the SQLite database in which Postico stores its data. The file is typically called ConnectionFavorites.db",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "database_uuid": {
+                        "description": "The unique identifier for the Postico database to update. Can be found by looking in the SQLite database.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "database_uuid": {
-                  "description": "The unique identifier for the Sequel Pro database to update. Can be found by looking in the plist.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "postico_datasources": {
-            "type": "array",
-            "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "postico_sqlite_path",
-                "database_uuid"
-              ],
-              "properties": {
-                "postico_sqlite_path": {
-                  "description": "Path to the SQLite database in which Postico stores its data. The file is typically called ConnectionFavorites.db",
-                  "type": "string",
-                  "minLength": 1
+                "shell_datasources": {
+                  "description": "Allows a file to be generated in a shell script that contains exports of environment variables containing the new credentials.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "username_variable",
+                      "password_variable",
+                      "filepath"
+                    ],
+                    "properties": {
+                      "filepath": {
+                        "description": "The path the shell script should be generated to.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "username_variable": {
+                        "description": "The name of the environment variable that should contain the username",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "password_variable": {
+                        "description": "The name of the environment variable that should contain the password",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 },
-                "database_uuid": {
-                  "description": "The unique identifier for the Postico database to update. Can be found by looking in the SQLite database.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "shell_datasources": {
-            "description": "Allows a file to be generated in a shell script that contains exports of environment variables containing the new credentials.",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "username_variable",
-                "password_variable",
-                "filepath"
-              ],
-              "properties": {
-                "filepath": {
-                  "description": "The path the shell script should be generated to.",
-                  "type": "string",
-                  "minLength": 1
-                },
-                "username_variable": {
-                  "description": "The name of the environment variable that should contain the username",
-                  "type": "string",
-                  "minLength": 1
-                },
-                "password_variable": {
-                  "description": "The name of the environment variable that should contain the password",
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "json_datasources": {
-            "description": "Allows a JSON file to be generated containing usernames and passwords.",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "identifier",
-                "filepath"
-              ],
-              "properties": {
-                "filepath": {
-                  "description": "The path the JSON file should be generated to.",
-                  "type": "string",
-                  "minLength": 1
-                },
-                "identifier": {
-                  "description": "The name of this vault role and vault path pair to be used as an identifier for this JSON object.",
-                  "type": "string",
-                  "minLength": 1
+                "json_datasources": {
+                  "description": "Allows a JSON file to be generated containing usernames and passwords.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "identifier",
+                      "filepath"
+                    ],
+                    "properties": {
+                      "filepath": {
+                        "description": "The path the JSON file should be generated to.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "identifier": {
+                        "description": "The name of this vault role and vault path pair to be used as an identifier for this JSON object.",
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -213,6 +231,5 @@
         }
       }
     }
-  },
-  "type": "array"
+  }
 }
