@@ -6,6 +6,7 @@
       "vault_role"
     ],
     "type": "object",
+    "additionalProperties": false,
     "properties": {
       "vault_path": {
         "description": "The path representing the datastore in the Vault. This is equivalent to $VAULT_PATH in the CLI command `vault read $VAULT_PATH/creds/$VAULT_ROLE`.",
@@ -19,12 +20,14 @@
       },
       "configurables": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "intellij_datasources": {
             "type": "array",
             "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "database_uuid",
                 "datasource_file_path"
@@ -56,6 +59,7 @@
             "description": "Allows changes to database access credentials within IntelliJ run configurations.",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "environment_variable",
                 "run_configurations_folder_path",
@@ -85,6 +89,7 @@
             "description": "Allows changes to database access credentials stored in a Querious 2 SQLite database.",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "querious2_sqlite_path",
                 "database_uuid"
@@ -108,6 +113,7 @@
             "description": "Allows changes to database access credentials for Sequel Pro plists.",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "sequel_pro_plist_path",
                 "database_uuid"
@@ -131,6 +137,7 @@
             "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "postico_sqlite_path",
                 "database_uuid"
@@ -154,13 +161,14 @@
             "type": "array",
             "items": {
               "type": "object",
+              "additionalProperties": false,
               "required": [
                 "username_variable",
                 "password_variable",
-                "script_path"
+                "filepath"
               ],
               "properties": {
-                "script_path": {
+                "filepath": {
                   "description": "The path the shell script should be generated to.",
                   "type": "string",
                   "minLength": 1
@@ -172,6 +180,30 @@
                 },
                 "password_variable": {
                   "description": "The name of the environment variable that should contain the password",
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "json_datasources": {
+            "description": "Allows a JSON file to be generated containing usernames and passwords.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "identifier",
+                "filepath"
+              ],
+              "properties": {
+                "filepath": {
+                  "description": "The path the JSON file should be generated to.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "identifier": {
+                  "description": "The name of this vault role and vault path pair to be used as an identifier for this JSON object.",
                   "type": "string",
                   "minLength": 1
                 }

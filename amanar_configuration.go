@@ -28,6 +28,7 @@ type AmanarConfigurationElement struct {
 type Configurables struct {
 	IntellijDatasources       []IntellijDatasource       `json:"intellij_datasources"`       // Allows IntelliJ datasource usernames and passwords to be changed. Most useful for; DataGrip and databases within IntelliJ Ultimate.
 	IntellijRunConfigurations []IntellijRunConfiguration `json:"intellij_run_configurations"`// Allows changes to database access credentials within IntelliJ run configurations.
+	JSONDatasources           []JSONDatasource           `json:"json_datasources"`           // Allows a JSON file to be generated containing usernames and passwords.
 	PosticoDatasources        []PosticoDatasource        `json:"postico_datasources"`        // Allows changes to database access credentials stored in a Postico SQLite database.
 	Querious2Datasources      []Querious2Datasource      `json:"querious2_datasources"`      // Allows changes to database access credentials stored in a Querious 2 SQLite database.
 	SequelProDatasources      []SequelProDatasource      `json:"sequel_pro_datasources"`     // Allows changes to database access credentials for Sequel Pro plists.
@@ -46,6 +47,11 @@ type IntellijRunConfiguration struct {
 	RunConfigurationsFolderPath string `json:"run_configurations_folder_path"`// A directory containing all IntelliJ run configurations to be examined. Usually located in; .idea/runConfigurations. Run configurations may need to be shared before becoming visible; in this folder.
 }
 
+type JSONDatasource struct {
+	Filepath   string `json:"filepath"`  // The path the JSON file should be generated to.
+	Identifier string `json:"identifier"`// The name of this vault role and vault path pair to be used as an identifier for this JSON; object.
+}
+
 type PosticoDatasource struct {
 	DatabaseUUID      string `json:"database_uuid"`      // The unique identifier for the Postico database to update. Can be found by looking in the; SQLite database.
 	PosticoSqlitePath string `json:"postico_sqlite_path"`// Path to the SQLite database in which Postico stores its data. The file is typically; called ConnectionFavorites.db
@@ -62,7 +68,7 @@ type SequelProDatasource struct {
 }
 
 type ShellDatasource struct {
+	Filepath         string `json:"filepath"`         // The path the shell script should be generated to.
 	PasswordVariable string `json:"password_variable"`// The name of the environment variable that should contain the password
-	ScriptPath       string `json:"script_path"`      // The path the shell script should be generated to.
 	UsernameVariable string `json:"username_variable"`// The name of the environment variable that should contain the username
 }
