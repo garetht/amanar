@@ -5,7 +5,7 @@ import (
 )
 
 // Tested with DataGrip 2017.2
-func NewIntellijDatasourceFile(filepath IntellijDatasourceFilepath) (*IntellijDatasourceFile, error) {
+func NewIntellijDatasourceFile(filepath string) (*IntellijDatasourceFile, error) {
 	d := etree.NewDocument()
 	err := d.ReadFromFile(string(filepath))
 
@@ -30,14 +30,14 @@ func NewIntellijDatasourceFile(filepath IntellijDatasourceFilepath) (*IntellijDa
 // that the former is the case.
 type IntellijDatasourceFile struct {
 	Document *etree.Document
-	Fullpath IntellijDatasourceFilepath
+	Fullpath string
 }
 
-func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid IntellijDatabaseUUID, newUsername string) (oldUsername string, err error) {
+func (dc *IntellijDatasourceFile) UpdateUsername(databaseUuid string, newUsername string) (oldUsername string, err error) {
 	component := dc.Document.SelectElement("project").SelectElement("component")
 
 	for _, dataSource := range component.SelectElements("data-source") {
-		if uuid := dataSource.SelectAttrValue("uuid", ""); IntellijDatabaseUUID(uuid) == databaseUuid {
+		if uuid := dataSource.SelectAttrValue("uuid", ""); string(uuid) == databaseUuid {
 
 			username := dataSource.SelectElement("user-name")
 			if username == nil {

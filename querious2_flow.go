@@ -6,21 +6,21 @@ import (
 	"errors"
 )
 
-func NewQuerious2Flow(config *Querious2DatasourcesConfig) (*Querious2Flow, error) {
-	database, err := NewQuerious2SQLiteDatabase(config.Querious2SQLitePath)
+func NewQuerious2Flow(config *Querious2Datasource) (*Querious2Flow, error) {
+	database, err := NewQuerious2SQLiteDatabase(config.Querious2SqlitePath)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Querious2Flow{
-		Querious2DatasourcesConfig: *config,
-		database:                   database,
+		Querious2Datasource: *config,
+		database:             database,
 	}, nil
 
 }
 
 type Querious2Flow struct {
-	Querious2DatasourcesConfig
+	Querious2Datasource
 	database    *Querious2SQLiteDatabase
 	credentials *Credentials
 }
