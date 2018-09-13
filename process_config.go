@@ -64,6 +64,15 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 		flows = append(flows, flow)
 	}
 
+	for _, jsonConfig := range configurables.JSONDatasources {
+		flow, err := NewJSONFlow(&jsonConfig)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		flows = append(flows, flow)
+	}
+
 	if len(errs) > 0 {
 		for _, err := range errs {
 			log.Printf("[FLOW PROCESSING] Encountered errors processing flow: %#v. Processing flows that worked.", err)

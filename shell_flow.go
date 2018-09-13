@@ -6,9 +6,9 @@ import (
 )
 
 func NewShellFlow(config *ShellDatasource) (*ShellFlow, error) {
-	parsedFile, err := NewShellFile(config.ScriptPath)
+	parsedFile, err := NewShellFile(config.Filepath)
 	if err != nil {
-		return nil, fmt.Errorf("could not open and parse shell file path '%s': %s", config.ScriptPath, err)
+		return nil, fmt.Errorf("could not open and parse shell file path '%s': %s", config.Filepath, err)
 	}
 
 	return &ShellFlow{
@@ -28,10 +28,10 @@ func (sf *ShellFlow) Name() string {
 }
 
 func (sf *ShellFlow) UpdateWithCredentials(credentials *Credentials) error {
-	log.Printf("[%s DATASOURCE] Updating parsed shell AST %s with new username %s and password %s", sf.Name(), sf.ScriptPath, credentials.Username, credentials.Password)
+	log.Printf("[%s DATASOURCE] Updating parsed shell AST %s with new username %s and password %s", sf.Name(), sf.Filepath, credentials.Username, credentials.Password)
 	sf.parsedFile.UpdateCredentials(sf.UsernameVariable, sf.PasswordVariable, credentials)
 	sf.credentials = credentials
-	log.Printf("[%s DATASOURCE] Updated parsed shell AST %s with new username %s and password %s", sf.Name(), sf.ScriptPath, credentials.Username, credentials.Password)
+	log.Printf("[%s DATASOURCE] Updated parsed shell AST %s with new username %s and password %s", sf.Name(), sf.Filepath, credentials.Username, credentials.Password)
 	return nil
 }
 

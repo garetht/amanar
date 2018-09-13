@@ -134,6 +134,8 @@ func (sf *ShellFile) WriteToDisk() error {
 func NewShellFile(filepath string) (*ShellFile, error) {
 	p := syntax.NewParser(syntax.KeepComments, syntax.Variant(syntax.LangBash))
 	file, err := os.OpenFile(filepath, os.O_RDONLY|os.O_CREATE, 0644)
+	defer file.Close()
+
 	if err != nil {
 		return nil, err
 	}
