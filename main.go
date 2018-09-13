@@ -11,6 +11,8 @@ func main() {
 }
 
 func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
+	log.Printf("\n\n\n\n =========================== [VAULT ADDRESS %s] =========================== \n\n", ce.VaultAddress)
+
 	ghc := &VaultGithubAuthClient{
 		GithubToken: githubToken,
 		VaultAddress: ce.VaultAddress,
