@@ -44,6 +44,7 @@ func (sf *JSONFlow) Name() string {
 
 func (sf *JSONFlow) UpdateWithCredentials(credentials *Credentials) error {
 	log.Printf("[%s DATASOURCE] Updating JSON credentials %s with new username %s and password %s", sf.Name(), sf.Filepath, credentials.Username, credentials.Password)
+	sf.credentials = credentials
 
 	found := false
 	for _, entry := range sf.parsedFile {
@@ -62,7 +63,7 @@ func (sf *JSONFlow) UpdateWithCredentials(credentials *Credentials) error {
 		})
 	}
 
-	log.Printf("[%s DATASOURCE] Updated JSON Credentials %s with new username %s and password %s", sf.Name(), sf.Filepath, credentials.Username, credentials.Password)
+	log.Printf("[%s DATASOURCE] Updated JSON credentials %s with new username %s and password %s", sf.Name(), sf.Filepath, credentials.Username, credentials.Password)
 	return nil
 }
 
