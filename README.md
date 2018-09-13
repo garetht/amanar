@@ -5,7 +5,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 
 **You should create backup copies of all configuration files before using this tool.**
 
-## Supported Applications
+## Supported Output Applications and Formats
 - Datagrip (tested with 2017.2)
 - Intellij IDEA Databases (in theory)
 - IntelliJ Run Configurations (tested with 2017.2)
@@ -13,6 +13,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - Sequel Pro (tested with 1.1.1)
 - Postico (tested with 1.2.2)
 - Shell script environment variable exports (tested with Bash)
+- JSON
 
 ## Usage
 
