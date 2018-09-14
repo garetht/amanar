@@ -16,6 +16,7 @@ type GithubLoginBody struct {
 
 type VaultGithubAuthClient struct {
 	GithubToken string
+	VaultAddress string
 	vaultClient *api.Client
 }
 
@@ -24,6 +25,7 @@ func (vc *VaultGithubAuthClient) loginWithGithub() error {
 	if err != nil {
 		return err
 	}
+	c.SetAddress(vc.VaultAddress)
 
 	// The raw version requires the /v1, while the logical reads
 	// do not need it.
