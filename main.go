@@ -37,6 +37,7 @@ func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
 			continue
 		}
 
+		log.Printf("[VAULT CONFIGURATION] %v:%v", configItem.VaultPath, configItem.VaultRole)
 		ProcessConfigItem(&configItem.Configurables, credentials)
 	}
 }
