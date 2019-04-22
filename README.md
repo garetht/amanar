@@ -1,7 +1,7 @@
 Amanar
 ===
 
-A tool to programmatically insert refreshed HashiCorp Vault credentials into desktop database application configurations.
+A tool to programmatically insert refreshed HashiCorp Vault credentials into desktop database application configurations, allowing you to use database GUIs and CLIs seamlessly with time-limited access credentials.
 
 **You should create backup copies of all configuration files before using this tool.**
 
