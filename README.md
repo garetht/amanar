@@ -7,10 +7,10 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 
 ## Supported Output Applications and Formats
 - Datagrip (tested with 2017.2)
-- Intellij IDEA Databases (in theory)
-- IntelliJ Run Configurations (tested with 2017.2)
+- Intellij IDEA Databases (tested with 2019.1)
+- IntelliJ Run Configurations (tested with 2017.2 and 2019.1)
 - Querious 2
-- Sequel Pro (tested with 1.1.1)
+- Sequel Pro (tested with 1.1.2)
 - Postico (tested with 1.2.2)
 - Shell script environment variable exports (tested with Bash)
 - JSON
@@ -45,13 +45,36 @@ Note that IntelliJ-specific paths can be found with [this guide to IntelliJ stor
 
 ### Dependencies
 
-Dependencies are managed by `dep`. Create a `pkgset` with `gvm pkgset create amanar`, then switch to it with `gvm pkgset use amanar`. The pre-GVM `GOPATH` should be added to the `GOPATH` of `gvm pkgenv amanar`. The `/bin` directory may be `PATH`. `dep ensure` should be run to install dependencies. Finally, run `go install` to build the binary.
+```bash
+# Install dep, go-bindata, and go (macOS's system go is too old)
+brew install go
+brew install go-bindata
+brew install dep
 
-This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
+# Make a GOPATH (or use an existing one and skip this section)
+cd wherever/you/want
+mkdir go
+cd go
+echo "export GOPATH=$(pwd)" >> ~/.bashrc
+echo "export PATH=$PATH:$(pwd)/bin" >> ~/.bashrc
+source ~/.bashrc
 
-The project has been successfully built on Go `1.8.3` on Mac OS 10.12.5. The mininum possible Go version required is `1.8.1`.
+# Clone
+mkdir -p src/github.com/garetht/
+cd src/github.com/garetht
+git clone git@github.com:garetht/amanar.git
+cd amanar
 
-`cgo` is also used to interface with OSX Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
+# Install dependencies and build the app
+dep install
+go install
+```
+
+This is a macOS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
+
+The project has been successfully built on Go `1.12.7` on macOS 10.14.5. The mininum possible Go version required when running on macOS 10.14 is `1.10.4`.
+
+`cgo` is also used to interface with macOS Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
 
 ## Developing: Extending
 
