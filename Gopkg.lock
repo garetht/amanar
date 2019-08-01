@@ -2,53 +2,70 @@
 
 
 [[projects]]
+  digest = "1:e1c6213ac1d5ced99201129e338ef5d36b31ad11b6d26008a1b65677da25a442"
   name = "github.com/DHowett/go-plist"
   packages = ["."]
+  pruneopts = "UT"
   revision = "2f847ea62b17703c861484a09f0e5841328a2cb9"
 
 [[projects]]
+  digest = "1:86849cd97161572bcdb705e0f6b986d0a250faa6b64c52f8a2a27199d0e16dee"
   name = "github.com/beevik/etree"
   packages = ["."]
+  pruneopts = "UT"
   revision = "15a30b44cfd6c5a16a7ddfe271bf146aaf2d3195"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:ca82a3b99694824c627573c2a76d0e49719b4a9c02d1d85a2ac91f1c1f52ab9b"
   name = "github.com/fatih/structs"
   packages = ["."]
+  pruneopts = "UT"
   revision = "a720dfa8df582c51dee1b36feabb906bde1588bd"
   version = "v1.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:4a0c6bb4805508a6287675fac876be2ac1182539ca8a32468d8128882e9d5009"
   name = "github.com/golang/snappy"
   packages = ["."]
+  pruneopts = "UT"
   revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
 
 [[projects]]
+  digest = "1:0ade334594e69404d80d9d323445d2297ff8161637f9b2d347cc6973d2d6f05b"
   name = "github.com/hashicorp/errwrap"
   packages = ["."]
+  pruneopts = "UT"
   revision = "8a6fb523712970c966eefc6b39ed2c5e74880354"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:f47d6109c2034cb16bd62b220e18afd5aa9d5a1630fe5d937ad96a4fb7cbb277"
   name = "github.com/hashicorp/go-cleanhttp"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e8ab9daed8d1ddd2d3c4efba338fe2eeae2e4f18"
   version = "v0.5.0"
 
 [[projects]]
+  digest = "1:f668349b83f7d779567c880550534addeca7ebadfdcf44b0b9c39be61864b4b7"
   name = "github.com/hashicorp/go-multierror"
   packages = ["."]
+  pruneopts = "UT"
   revision = "886a7fbe3eb1c874d46f623bfa70af45f425b3d1"
   version = "v1.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:45aad874d3c7d5e8610427c81870fb54970b981692930ec2a319ce4cb89d7a00"
   name = "github.com/hashicorp/go-rootcerts"
   packages = ["."]
+  pruneopts = "UT"
   revision = "6bb64b370b90e7ef1fa532be9e591a81c3493e00"
 
 [[projects]]
+  digest = "1:ea40c24cdbacd054a6ae9de03e62c5f252479b96c716375aace5c120d68647c8"
   name = "github.com/hashicorp/hcl"
   packages = [
     ".",
@@ -59,84 +76,108 @@
     "hcl/token",
     "json/parser",
     "json/scanner",
-    "json/token"
+    "json/token",
   ]
+  pruneopts = "UT"
   revision = "8cb6e5b959231cc1119e43259c4a608f9c51a241"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:4ad3b4271392c42649b41a65a7718a42469e167b6d09cc5b40e7934b0a488c24"
   name = "github.com/hashicorp/vault"
   packages = [
     "api",
     "helper/compressutil",
     "helper/jsonutil",
-    "helper/parseutil"
+    "helper/parseutil",
   ]
+  pruneopts = "UT"
   revision = "c1d69f8d79b365fc5de4528abbca55ab7f04047a"
 
 [[projects]]
   branch = "master"
+  digest = "1:623ecae39198545c820dfb09f7ab7f70c1ca4726ae97d387e9c8a7375622fde0"
   name = "github.com/keybase/go-keychain"
   packages = ["."]
+  pruneopts = "UT"
   revision = "15d3657f24fc7e290714ab795239c5bb33b091ea"
 
 [[projects]]
+  digest = "1:12f185e0528a9aa7694452cb833552aa2e2058a4862110d8fcd07651ede82c17"
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
+  pruneopts = "UT"
   revision = "6654e412c3c7eabb310d920cf73a2102dbf8c632"
 
 [[projects]]
+  digest = "1:78bbb1ba5b7c3f2ed0ea1eab57bdd3859aec7e177811563edc41198a760b06af"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
+  pruneopts = "UT"
   revision = "ae18d6b8b3205b561c79e8e5f69bff09736185f4"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:645110e089152bd0f4a011a2648fbb0e4df5977be73ca605781157ac297f50c4"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
+  pruneopts = "UT"
   revision = "fa473d140ef3c6adf42d6b391fe76707f1f243c8"
   version = "v1.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:30908daafe1c49ada890b07ec8872740bf06349f53da0968f95aaf4169ebb7bb"
   name = "github.com/mvdan/sh"
   packages = ["syntax"]
+  pruneopts = "UT"
   revision = "09fe3e0538c045b4601419241d6ca94eb67c74f0"
 
 [[projects]]
+  digest = "1:4ca145a665316d3c020a39c0741780fa3636b9152b824206796c4dce541f4a24"
   name = "github.com/sethgrid/pester"
   packages = ["."]
+  pruneopts = "UT"
   revision = "03e26c9abbbf5accb8349790bf9f41bde09d72c3"
   version = "1.0.0"
 
 [[projects]]
+  digest = "1:bf43e36bbce8327ffb940974d64d902e2fe2ca810963386e33b162559e7c97f5"
   name = "github.com/xeipuuv/gojsonpointer"
   packages = ["."]
+  pruneopts = "UT"
   revision = "6fe8760cad3569743d51ddbb243b26f8456742dc"
 
 [[projects]]
+  digest = "1:32bcfc1e3d2f83a36e1b0fb680b7363aff4154aafafde1dc4d7112b82f5151f1"
   name = "github.com/xeipuuv/gojsonreference"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e02fc20de94c78484cd5ffb007f8af96be030a45"
 
 [[projects]]
+  digest = "1:c6e3c33a0af93635b34e603019c04c6566f09a79aab4a5d886efa572534a1964"
   name = "github.com/xeipuuv/gojsonschema"
   packages = ["."]
+  pruneopts = "UT"
   revision = "0c8571ac0ce161a5feb57375a9cdf148c98c0f70"
 
 [[projects]]
   branch = "master"
+  digest = "1:d1209fa9ed40a3a24de8498a9bead59eb3333f16a73fa23ba1fc6677a3cfc9d7"
   name = "golang.org/x/net"
   packages = [
     "context",
     "http/httpguts",
     "http2",
     "http2/hpack",
-    "idna"
+    "idna",
   ]
+  pruneopts = "UT"
   revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
 
 [[projects]]
+  digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
   name = "golang.org/x/text"
   packages = [
     "collate",
@@ -152,14 +193,23 @@
     "unicode/bidi",
     "unicode/cldr",
     "unicode/norm",
-    "unicode/rangetable"
+    "unicode/rangetable",
   ]
+  pruneopts = "UT"
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a3dee5e5f443ac27e45fee097b03788c7761b9fb5b4afa04eab36091ff0678a0"
+  input-imports = [
+    "github.com/DHowett/go-plist",
+    "github.com/beevik/etree",
+    "github.com/hashicorp/vault/api",
+    "github.com/keybase/go-keychain",
+    "github.com/mattn/go-sqlite3",
+    "github.com/mvdan/sh/syntax",
+    "github.com/xeipuuv/gojsonschema",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
