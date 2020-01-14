@@ -8,7 +8,7 @@ import (
 
 	"errors"
 
-	"github.com/DHowett/go-plist"
+	"howett.net/plist"
 )
 
 const SEQUEL_PRO_PLIST_FORMAT = plist.XMLFormat
