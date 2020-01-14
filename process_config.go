@@ -90,6 +90,10 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 		return
 	}
 
+	return validateConfiguration(schemaAssetPath, bytes)
+}
+
+func validateConfiguration(schemaAssetPath string, bytes []byte) (c AmanarConfiguration, err error, re []gojsonschema.ResultError) {
 	schema, err := Asset(schemaAssetPath)
 	if err != nil {
 		return
@@ -102,9 +106,7 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfigur
 
 	documentLoader := gojsonschema.NewGoLoader(c)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
-
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-
 	if err != nil {
 		return
 	}
