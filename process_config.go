@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -84,33 +85,47 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	return
 }
 
-func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfiguration, err error, re []gojsonschema.ResultError) {
-	bytes, err := ioutil.ReadFile(configFilepath)
+func unmarshalConfiguration(configFilepath string, bytes []byte) (c AmanarConfiguration, err error) {
+	c, err = UnmarshalYamlAmanarConfiguration(bytes)
+
 	if err != nil {
-		return
+		return nil, fmt.Errorf("could not unmarshal amanar configuration: %w", err)
 	}
 
+	return c, err
+}
+
+func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfiguration, error, []gojsonschema.ResultError) {
+	bytes, err := ioutil.ReadFile(configFilepath)
+	if err != nil {
+		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
+	}
+
+	configuration, err := unmarshalConfiguration(configFilepath, bytes)
+	if err != nil {
+		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
+	}
+
+	err, validationErrors := validateConfiguration(schemaAssetPath, &configuration)
+
+	return configuration, err, validationErrors
+}
+
+func validateConfiguration(schemaAssetPath string, configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
 	schema, err := Asset(schemaAssetPath)
 	if err != nil {
 		return
 	}
 
-	documentLoader := gojsonschema.NewBytesLoader(bytes)
+	documentLoader := gojsonschema.NewGoLoader(configuration)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
-
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-
 	if err != nil {
 		return
 	}
 
 	if !result.Valid() {
 		re = result.Errors()
-		return
-	}
-
-	c, err = UnmarshalAmanarConfiguration(bytes)
-	if err != nil {
 		return
 	}
 

@@ -1,0 +1,7 @@
+variables:
+  GIT_DEPTH: 2
+default:
+  image: golang:1.13
+test:
+  script:
+    - make test

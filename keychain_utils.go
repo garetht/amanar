@@ -1,3 +1,5 @@
+// +build darwin,cgo
+
 package main
 
 import (
@@ -58,8 +60,6 @@ func CreateKeychainEntryForService(service, account, password string, trustedApp
 	item.SetAccount(account)
 	item.SetLabel(service)
 
-	setTrustedApplications(trustedApplications, &item)
-
 	item.SetData([]byte(password))
 
 	err := keychain.AddItem(item)
@@ -69,13 +69,4 @@ func CreateKeychainEntryForService(service, account, password string, trustedApp
 	}
 
 	return nil
-}
-func setTrustedApplications(trustedApplications []string, item *keychain.Item) {
-	if len(trustedApplications) > 0 {
-		access := keychain.Access{
-			Label:               "Amanar Keychain Entries",
-			TrustedApplications: trustedApplications,
-		}
-		item.SetAccess(&access)
-	}
 }

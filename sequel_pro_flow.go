@@ -8,7 +8,7 @@ import (
 
 	"errors"
 
-	"github.com/DHowett/go-plist"
+	"howett.net/plist"
 )
 
 const SEQUEL_PRO_PLIST_FORMAT = plist.XMLFormat
@@ -90,7 +90,7 @@ func (sp *SequelProFlow) Name() string {
 func (sp *SequelProFlow) UpdateWithCredentials(credentials *Credentials) (err error) {
 	plistItem, found := sp.findPlistItem()
 	if !found {
-		return errors.New(fmt.Sprintf("[SEQUEL PRO] Could not find plist item for database UUID %d", sp.DatabaseUUID))
+		return errors.New(fmt.Sprintf("[SEQUEL PRO] Could not find plist item for database UUID %s", sp.DatabaseUUID))
 	}
 
 	plistItem.User = credentials.Username
