@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"path"
 
 	"github.com/xeipuuv/gojsonschema"
 )
@@ -84,27 +86,43 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	return
 }
 
-func LoadConfiguration(configFilepath, schemaAssetPath string) (c AmanarConfiguration, err error, re []gojsonschema.ResultError) {
-	bytes, err := ioutil.ReadFile(configFilepath)
-	if err != nil {
-		return
+func unmarshalConfiguration(configFilepath string, bytes []byte) (c AmanarConfiguration, err error) {
+	if path.Ext(configFilepath) == ".yml" {
+		c, err = UnmarshalYamlAmanarConfiguration(bytes)
+	} else {
+		c, err = UnmarshalAmanarConfiguration(bytes)
 	}
 
-	return validateConfiguration(schemaAssetPath, bytes)
+	if err != nil {
+		return nil, fmt.Errorf("could not unmarshal amanar configuration: %w", err)
+	}
+
+	return c, err
 }
 
-func validateConfiguration(schemaAssetPath string, bytes []byte) (c AmanarConfiguration, err error, re []gojsonschema.ResultError) {
+func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfiguration, error, []gojsonschema.ResultError) {
+	bytes, err := ioutil.ReadFile(configFilepath)
+	if err != nil {
+		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
+	}
+
+	configuration, err := unmarshalConfiguration(configFilepath, bytes)
+	if err != nil {
+		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
+	}
+
+	err, validationErrors := validateConfiguration(schemaAssetPath, &configuration)
+
+	return configuration, err, validationErrors
+}
+
+func validateConfiguration(schemaAssetPath string, configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
 	schema, err := Asset(schemaAssetPath)
 	if err != nil {
 		return
 	}
 
-	c, err = UnmarshalAmanarConfiguration(bytes)
-	if err != nil {
-		return
-	}
-
-	documentLoader := gojsonschema.NewGoLoader(c)
+	documentLoader := gojsonschema.NewGoLoader(configuration)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {

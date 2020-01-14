@@ -49,7 +49,7 @@ Dependencies are managed by Go modules. Run `go build` to build this project. `c
 
 This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
 
-The project has been successfully built on Go `1.13.6` on Mac OS 10.13.6. The mininum possible Go version required is `1.8.1`.
+The project has been successfully built on Go `1.13.6` on Mac OS 10.13.6. The mininum possible Go version required is `1.13`.
 
 
 ## Developing: Extending

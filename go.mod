@@ -19,6 +19,7 @@ require (
 	golang.org/x/text v0.3.2 // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
+	gopkg.in/yaml.v2 v2.2.1
 	howett.net/plist v0.0.0-20181124034731-591f970eefbb
 	mvdan.cc/sh v2.6.4+incompatible // indirect
 )
