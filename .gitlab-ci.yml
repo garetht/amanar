@@ -1,0 +1,5 @@
+default:
+  image: golang:1.13
+test:
+  script:
+    - go test -v
