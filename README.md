@@ -45,7 +45,7 @@ Note that IntelliJ-specific paths can be found with [this guide to IntelliJ stor
 
 ### Dependencies
 
-Dependencies are managed by Go modules. Run `go build` to build this project. `cgo` is also used to interface with OSX Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
+Dependencies are managed by Go modules. Run `make build` to build this project. `cgo` is also used to interface with OSX Foundation and Security libraries as well as for SQLite support for Querious. You may require `CGO_ENABLED=1` to build this project.
 
 This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
 
