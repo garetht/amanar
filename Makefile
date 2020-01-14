@@ -16,3 +16,7 @@ install: generate
 PHONY: build
 build: generate
 	go build -ldflags "$(ld_flags)"
+
+PHONY: test
+test:
+	go test -v
