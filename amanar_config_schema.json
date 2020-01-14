@@ -38,7 +38,7 @@
               "additionalProperties": false,
               "properties": {
                 "intellij_datasources": {
-                  "type": "array",
+                  "type": ["array", "null"],
                   "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
                   "items": {
                     "type": "object",
@@ -53,14 +53,6 @@
                         "type": "string",
                         "minLength": 1
                       },
-                      "trusted_applications": {
-                        "description": "If the Keychain entries you want to create already exist, this is unnecessary. A list of full paths to applications to allow the Keychain to trust to reduce the number of permissions prompts. This path should end in .app.",
-                        "items": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "type": "array"
-                      },
                       "database_uuid": {
                         "description": "The IntelliJ UUID for the database you want to update. You can find this by examining the dataSources.local.xml file.",
                         "type": "string",
@@ -70,7 +62,7 @@
                   }
                 },
                 "intellij_run_configurations": {
-                  "type": "array",
+                  "type": ["array", "null"],
                   "description": "Allows changes to database access credentials within IntelliJ run configurations.",
                   "items": {
                     "type": "object",
@@ -100,7 +92,7 @@
                   }
                 },
                 "querious2_datasources": {
-                  "type": "array",
+                  "type": ["array", "null"],
                   "description": "Allows changes to database access credentials stored in a Querious 2 SQLite database.",
                   "items": {
                     "type": "object",
@@ -124,7 +116,7 @@
                   }
                 },
                 "sequel_pro_datasources": {
-                  "type": "array",
+                  "type": ["array", "null"],
                   "description": "Allows changes to database access credentials for Sequel Pro plists.",
                   "items": {
                     "type": "object",
@@ -148,7 +140,7 @@
                   }
                 },
                 "postico_datasources": {
-                  "type": "array",
+                  "type": ["array", "null"],
                   "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
                   "items": {
                     "type": "object",
@@ -173,7 +165,7 @@
                 },
                 "shell_datasources": {
                   "description": "Allows a file to be generated in a shell script that contains exports of environment variables containing the new credentials.",
-                  "type": "array",
+                  "type": ["array", "null"],
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
@@ -203,7 +195,7 @@
                 },
                 "json_datasources": {
                   "description": "Allows a JSON file to be generated containing usernames and passwords.",
-                  "type": "array",
+                  "type": ["array", "null"],
                   "items": {
                     "type": "object",
                     "additionalProperties": false,

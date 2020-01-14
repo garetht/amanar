@@ -1,3 +1,4 @@
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse and unparse this JSON data, add this code to your project and do:
 //
 //    amanarConfiguration, err := UnmarshalAmanarConfiguration(bytes)
@@ -43,9 +44,8 @@ type Configurables struct {
 }
 
 type IntellijDatasource struct {
-	DatabaseUUID        string   `json:"database_uuid"`       // The IntelliJ UUID for the database you want to update. You can find this by examining the; dataSources.local.xml file.
-	DatasourceFilePath  string   `json:"datasource_file_path"`// The path to IntelliJ data sources file. The file is typically called; dataSources.local.xml.
-	TrustedApplications []string `json:"trusted_applications"`// If the Keychain entries you want to create already exist, this is unnecessary. A list of; full paths to applications to allow the Keychain to trust to reduce the number of; permissions prompts. This path should end in .app.
+	DatabaseUUID       string `json:"database_uuid"`       // The IntelliJ UUID for the database you want to update. You can find this by examining the; dataSources.local.xml file.
+	DatasourceFilePath string `json:"datasource_file_path"`// The path to IntelliJ data sources file. The file is typically called; dataSources.local.xml.
 }
 
 type IntellijRunConfiguration struct {
