@@ -30,6 +30,25 @@
               "sequel_pro_plist_path": "/path/to/sequel/pro.plist",
               "database_uuid": "120309129302"
             }
+          ],
+          "json_datasources": [
+            {
+              "filepath": "/path/to/json.json",
+              "identifier": "path-role"
+            }
+          ],
+          "postico_datasources": [
+            {
+              "database_uuid": "1234",
+              "postico_sqlite_path": "/path/to/postico"
+            }
+          ],
+          "shell_datasources": [
+            {
+              "filepath": "/shell/path",
+              "password_variable": "PASS",
+              "username_variable": "USERNAME"
+            }
           ]
         }
       }
