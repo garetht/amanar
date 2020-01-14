@@ -7,4 +7,3 @@ func UnmarshalYamlAmanarConfiguration(data []byte) (AmanarConfiguration, error) 
 	err := yaml.Unmarshal(data, &r)
 	return r, err
 }
-

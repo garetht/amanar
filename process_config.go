@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"path"
 
 	"github.com/xeipuuv/gojsonschema"
 )
@@ -87,11 +86,7 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 }
 
 func unmarshalConfiguration(configFilepath string, bytes []byte) (c AmanarConfiguration, err error) {
-	if path.Ext(configFilepath) == ".yml" {
-		c, err = UnmarshalYamlAmanarConfiguration(bytes)
-	} else {
-		c, err = UnmarshalAmanarConfiguration(bytes)
-	}
+	c, err = UnmarshalYamlAmanarConfiguration(bytes)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal amanar configuration: %w", err)
