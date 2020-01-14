@@ -5,8 +5,11 @@ import (
 	"os"
 )
 
+var GitCommit string
+var BuildDate string
 
 func main() {
+	log.Printf("Amanar. version: %s, built: %s", GitCommit, BuildDate)
 	executeAmanar()
 }
 
