@@ -216,6 +216,34 @@
                       }
                     }
                   }
+                },
+                "template_datasources": {
+                  "description": "Fills credentials into a provided Go template string or template file and prints the result to stdout. Unlike the other datasources, templates are generated anew each time and do not attempt to find previously existing keys to modify. Go templates are documented here: https://golang.org/pkg/text/template/",
+                  "type": ["array", "null"],
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": ["template_path"]
+                      },
+                      {
+                        "required": ["template"]
+                      }
+                    ],
+                    "maxProperties": 1,
+                    "properties": {
+                      "template_path": {
+                        "description": "The path to the Go template file that will be filled in with credentials.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "template": {
+                        "description": "A Go template string that will be filled in with credentials.",
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
