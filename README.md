@@ -14,6 +14,7 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - Postico (tested with 1.2.2)
 - Shell script environment variable exports (tested with Bash)
 - JSON
+- Golang templates
 
 ## Usage
 
