@@ -4,7 +4,7 @@ default:
   image: golang:1.13
 test:
   script:
-    - make test
+    - make docker-test
 deploy:
   stage: deploy
   image:

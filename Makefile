@@ -23,6 +23,11 @@ PHONY: test
 test:
 	go test -v
 
+PHONY: docker-test
+docker-test: CGO_ENABLED=0
+docker-test:
+	go test -v
+
 PHONY: docker-install
 docker-install: CGO_ENABLED=0
 docker-install: GOOS=linux
