@@ -1,4 +1,4 @@
-FROM golang:1.13
+FROM golang:1.13 as build
 
 WORKDIR /app
 
@@ -11,6 +11,10 @@ RUN go mod download
 
 COPY . .
 
-RUN make install
+RUN make docker-install
 
-ENTRYPOINT ["amanar"]
+FROM scratch
+
+COPY --from=build /bin/amanar /bin/amanar
+
+ENTRYPOINT ["/bin/amanar"]
