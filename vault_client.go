@@ -1,4 +1,4 @@
-package main
+package amanar
 
 import (
 	"net/http"
@@ -20,7 +20,7 @@ type VaultGithubAuthClient struct {
 	vaultClient *api.Client
 }
 
-func (vc *VaultGithubAuthClient) loginWithGithub() error {
+func (vc *VaultGithubAuthClient) LoginWithGithub() error {
 	c, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (vc *VaultGithubAuthClient) loginWithGithub() error {
 	return nil
 }
 
-func (vc *VaultGithubAuthClient) getCredential(vaultPath, vaultRole string) (*api.Secret, error) {
+func (vc *VaultGithubAuthClient) GetCredential(vaultPath, vaultRole string) (*api.Secret, error) {
 	if vc.vaultClient == nil || vc.vaultClient.Token() == "" {
 		return nil, errors.New("Vault Github client has not yet been intialized with a token. Please log in.")
 	}

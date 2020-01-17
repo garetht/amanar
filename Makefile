@@ -1,5 +1,6 @@
 commit := $$(git rev-list -1 HEAD)
 build_date := $$(date)
+main := cmd/amanar.go
 
 ld_flags := -X 'main.GitCommit=$(commit)' -X 'main.BuildDate=$(build_date)'
 
@@ -12,12 +13,12 @@ generate:
 PHONY: install
 install: CGO_ENABLED := 1
 install: generate
-	go install -ldflags "$(ld_flags)"
+	go install -ldflags "$(ld_flags)" $(main)
 
 PHONY: build
 build: CGO_ENABLED := 1
 build: generate
-	go build -ldflags "$(ld_flags)"
+	go build -ldflags "$(ld_flags)" $(main)
 
 PHONY: test
 test:

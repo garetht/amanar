@@ -4,7 +4,7 @@
 //    amanarConfiguration, err := UnmarshalAmanarConfiguration(bytes)
 //    bytes, err = amanarConfiguration.Marshal()
 
-package main
+package amanar
 
 import "encoding/json"
 

@@ -1,6 +1,6 @@
 // +build darwin cgo
 
-package main
+package amanar
 
 import (
 	"errors"

@@ -1,4 +1,4 @@
-package main
+package amanar
 
 import (
 	"github.com/hashicorp/vault/api"
