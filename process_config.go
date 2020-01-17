@@ -105,7 +105,7 @@ func unmarshalConfiguration(bytes []byte) (c AmanarConfiguration, err error) {
 	return c, err
 }
 
-func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfiguration, error, []gojsonschema.ResultError) {
+func LoadConfiguration(configFilepath string) (AmanarConfiguration, error, []gojsonschema.ResultError) {
 	bytes, err := ioutil.ReadFile(configFilepath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
@@ -116,13 +116,13 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfigurat
 		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
 	}
 
-	err, validationErrors := validateConfiguration(schemaAssetPath, &configuration)
+	err, validationErrors := ValidateConfiguration(&configuration)
 
 	return configuration, err, validationErrors
 }
 
-func validateConfiguration(schemaAssetPath string, configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
-	schema, err := Asset(schemaAssetPath)
+func ValidateConfiguration(configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
+	schema, err := Asset("amanar_config_schema.json")
 	if err != nil {
 		return fmt.Errorf("could not load schema assets: %w", err), nil
 	}

@@ -47,7 +47,7 @@ func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
 
 //go:generate go-bindata amanar_config_schema.json
 func executeAmanar() {
-	configurationElements, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"), "amanar_config_schema.json")
+	configurationElements, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"))
 
 	if err != nil {
 		log.Fatalf("[CONFIG] Could not load configuration file: %s", err)
