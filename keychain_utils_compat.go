@@ -1,6 +1,6 @@
 // +build !darwin !cgo
 
-package main
+package amanar
 
 // Compatibility functions for building with non-Darwin systems - assume that
 // the keychain works as it should
