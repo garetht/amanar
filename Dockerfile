@@ -2,6 +2,8 @@ FROM golang:1.13
 
 WORKDIR /app
 
+RUN go get -u github.com/kevinburke/go-bindata/...
+
 COPY go.mod .
 COPY go.sum .
 
@@ -9,5 +11,6 @@ RUN go mod download
 
 COPY . .
 
-ENV CGO_ENABLED=1
-RUN go test -v
+RUN make install
+
+ENTRYPOINT ["amanar"]

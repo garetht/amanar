@@ -78,6 +78,6 @@ To regenerate this file when the data is updated, run `go generate`.
 
 ## Developing: Regenerating Bindata
 
-We compile the JSON Schema for the Amanar configuration into the Go binary for convenience using `go-bindata` (`brew install go-bindata`)
+We compile the JSON Schema for the Amanar configuration into the Go binary for convenience using `go-bindata` (`brew install go-bindata`, https://github.com/kevinburke/go-bindata)
 
 To regenerate this file when the data is updated, run `go generate`.
