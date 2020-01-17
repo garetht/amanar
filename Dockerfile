@@ -1,6 +1,8 @@
-FROM golang:1.13
+FROM golang:1.13 as build
 
 WORKDIR /app
+
+RUN go get -u github.com/kevinburke/go-bindata/...
 
 COPY go.mod .
 COPY go.sum .
@@ -9,5 +11,10 @@ RUN go mod download
 
 COPY . .
 
-ENV CGO_ENABLED=1
-RUN go test -v
+RUN make docker-install
+
+FROM scratch
+
+COPY --from=build /bin/amanar /bin/amanar
+
+ENTRYPOINT ["/bin/amanar"]

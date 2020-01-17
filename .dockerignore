@@ -1,2 +1,5 @@
 .idea
-.git
+Dockerfile
+LICENSE
+.gitlab-ci.yml
+README.md
