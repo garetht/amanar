@@ -33,4 +33,4 @@ PHONY: docker-install
 docker-install: CGO_ENABLED := 0
 docker-install: GOOS := linux
 docker-install:
-	go build main -ldflags "$(ld_flags) -w -s" -a -o /bin/amanar $(main)
+	go build -ldflags "$(ld_flags) -w -s" -a -o /bin/amanar $(main)
