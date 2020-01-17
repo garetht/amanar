@@ -6,6 +6,9 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 **You should create backup copies of all configuration files before using this tool.**
 
 ## Supported Output Applications and Formats
+
+### With in-place updating of existing data
+
 - Datagrip (tested with 2017.2)
 - Intellij IDEA Databases (in theory)
 - IntelliJ Run Configurations (tested with 2017.2)
@@ -14,6 +17,9 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 - Postico (tested with 1.2.2)
 - Shell script environment variable exports (tested with Bash)
 - JSON
+
+### To `stdout` without updating existing data
+- Golang templates
 
 ## Usage
 
@@ -66,7 +72,7 @@ To add support for a new data source, do the following:
 
 We use quicktype to generate the configuration types from the provided JSON schema. Quicktype can be installed from NPM with `npm install -g quicktype`.
 
-To regenerate the types, run `npx quicktype -s schema amanar_config_schema.json -t AmanarConfiguration -l go | sed -E -e 's/json:"(.+)"/json:"\1",yaml:"\1"/g' > amanar_configuration.go`.
+To regenerate the types, run `npx quicktype -s schema amanar_config_schema.json -t AmanarConfiguration -l go | sed -E -e 's/json:"(.+)"/json:"\1" yaml:"\1"/g' > amanar_configuration.go`.
 
 To regenerate this file when the data is updated, run `go generate`.
 

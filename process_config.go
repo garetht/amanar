@@ -74,6 +74,16 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 		flows = append(flows, flow)
 	}
 
+	for _, templateConfig := range configurables.TemplateDatasources {
+		flow, err := NewTemplateFlow(&templateConfig)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		flows = append(flows, flow)
+	}
+
+
 	if len(errs) > 0 {
 		for _, err := range errs {
 			log.Printf("[FLOW PROCESSING] Encountered errors processing flow: %#v. Processing flows that worked.", err)
@@ -85,7 +95,7 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	return
 }
 
-func unmarshalConfiguration(configFilepath string, bytes []byte) (c AmanarConfiguration, err error) {
+func unmarshalConfiguration(bytes []byte) (c AmanarConfiguration, err error) {
 	c, err = UnmarshalYamlAmanarConfiguration(bytes)
 
 	if err != nil {
@@ -101,7 +111,7 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfigurat
 		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
 	}
 
-	configuration, err := unmarshalConfiguration(configFilepath, bytes)
+	configuration, err := unmarshalConfiguration(bytes)
 	if err != nil {
 		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
 	}
@@ -114,14 +124,14 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfigurat
 func validateConfiguration(schemaAssetPath string, configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
 	schema, err := Asset(schemaAssetPath)
 	if err != nil {
-		return
+		return fmt.Errorf("could not load schema assets: %w", err), nil
 	}
 
 	documentLoader := gojsonschema.NewGoLoader(configuration)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		return
+		return fmt.Errorf("was not able to run validation on schema: %w", err), nil
 	}
 
 	if !result.Valid() {

@@ -55,7 +55,7 @@ func executeAmanar() {
 	}
 
 	if resultErrors != nil {
-		log.Println("[CONFIG SCHEMA] The provided configuration JSON did not conform to the structure required by the JSON Schema.")
+		log.Println("[CONFIG SCHEMA] The provided configuration did not conform to the structure required by the JSON Schema.")
 		for _, resultErr := range resultErrors {
 			log.Printf("[CONFIG SCHEMA] At JSON location %s: %s", resultErr.Context().String(), resultErr.Description())
 		}

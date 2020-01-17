@@ -41,6 +41,7 @@ type Configurables struct {
 	Querious2Datasources      []Querious2Datasource      `json:"querious2_datasources" yaml:"querious2_datasources"`      // Allows changes to database access credentials stored in a Querious 2 SQLite database.
 	SequelProDatasources      []SequelProDatasource      `json:"sequel_pro_datasources" yaml:"sequel_pro_datasources"`     // Allows changes to database access credentials for Sequel Pro plists.
 	ShellDatasources          []ShellDatasource          `json:"shell_datasources" yaml:"shell_datasources"`          // Allows a file to be generated in a shell script that contains exports of environment; variables containing the new credentials.
+	TemplateDatasources       []TemplateDatasource       `json:"template_datasources" yaml:"template_datasources"`       // Fills credentials into a provided Go template string or template file and prints the; result to stdout. Unlike the other datasources, templates are generated anew each time; and do not attempt to find previously existing keys to modify. Go templates are; documented here: https://golang.org/pkg/text/template/
 }
 
 type IntellijDatasource struct {
@@ -78,4 +79,9 @@ type ShellDatasource struct {
 	Filepath         string `json:"filepath" yaml:"filepath"`         // The path the shell script should be generated to.
 	PasswordVariable string `json:"password_variable" yaml:"password_variable"`// The name of the environment variable that should contain the password
 	UsernameVariable string `json:"username_variable" yaml:"username_variable"`// The name of the environment variable that should contain the username
+}
+
+type TemplateDatasource struct {
+	Template     *string `json:"template,omitempty" yaml:"template,omitempty"`     // A Go template string that will be filled in with credentials.
+	TemplatePath *string `json:"template_path,omitempty" yaml:"template_path,omitempty"`// The path to the Go template file that will be filled in with credentials.
 }
