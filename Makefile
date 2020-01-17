@@ -23,8 +23,13 @@ PHONY: test
 test:
 	go test -v
 
+PHONY: docker-test
+docker-test: CGO_ENABLED := 0
+docker-test:
+	go test -v
+
 PHONY: docker-install
 docker-install: CGO_ENABLED := 0
-docker-install: GOOS=linux
+docker-install: GOOS := linux
 docker-install:
 	go build -ldflags "$(ld_flags) -w -s" -a -o /bin/amanar

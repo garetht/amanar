@@ -7,3 +7,7 @@ func UnmarshalYamlAmanarConfiguration(data []byte) (AmanarConfiguration, error) 
 	err := yaml.Unmarshal(data, &r)
 	return r, err
 }
+
+func (r *AmanarConfiguration) MarshalYaml() ([]byte, error) {
+	return yaml.Marshal(r)
+}
