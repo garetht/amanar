@@ -124,14 +124,14 @@ func LoadConfiguration(configFilepath, schemaAssetPath string) (AmanarConfigurat
 func validateConfiguration(schemaAssetPath string, configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
 	schema, err := Asset(schemaAssetPath)
 	if err != nil {
-		return
+		return fmt.Errorf("could not load schema assets: %w", err), nil
 	}
 
 	documentLoader := gojsonschema.NewGoLoader(configuration)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		return
+		return fmt.Errorf("was not able to run validation on schema: %w", err), nil
 	}
 
 	if !result.Valid() {

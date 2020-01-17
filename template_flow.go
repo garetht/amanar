@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 )
 
 func NewTemplateFlow(config *TemplateDatasource) (*TemplateFlow, error) {
@@ -18,10 +19,11 @@ func NewTemplateFlow(config *TemplateDatasource) (*TemplateFlow, error) {
 	var err error
 	var source *TemplateSource
 
+	writer := os.Stdout
 	if config.Template != nil {
-		source, err = NewTemplateSourceFromString(config.Template)
+		source, err = NewTemplateSourceFromString(config.Template, writer)
 	} else {
-		source, err = NewTemplateSourceFromFile(config.TemplatePath)
+		source, err = NewTemplateSourceFromFile(config.TemplatePath, writer)
 	}
 
 	if err != nil {
@@ -29,13 +31,11 @@ func NewTemplateFlow(config *TemplateDatasource) (*TemplateFlow, error) {
 	}
 
 	return &TemplateFlow{
-		TemplateDatasource: *config,
 		source:      source,
 	}, nil
 }
 
 type TemplateFlow struct {
-	TemplateDatasource
 	credentials *Credentials
 	source      *TemplateSource
 }
@@ -45,9 +45,9 @@ func (tf *TemplateFlow) Name() string {
 }
 
 func (tf *TemplateFlow) UpdateWithCredentials(credentials *Credentials) error {
-	log.Printf("[%s DATASOURCE] Updating template flow %s with new username %s and password %s", tf.Name(), credentials.Username, credentials.Password)
+	log.Printf("[%s DATASOURCE] Updating template flow with new username %s and password %s", tf.Name(), credentials.Username, credentials.Password)
 	tf.credentials = credentials
-	log.Printf("[%s DATASOURCE] Updated template flow %s with new username %s and password %s", tf.Name(), credentials.Username, credentials.Password)
+	log.Printf("[%s DATASOURCE] Updated template flow with new username %s and password %s", tf.Name(), credentials.Username, credentials.Password)
 	return nil
 }
 
