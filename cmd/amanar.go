@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/garetht/amanar"
 	"log"
 	"os"
 )
@@ -13,27 +14,27 @@ func main() {
 	executeAmanar()
 }
 
-func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
+func processVaultAddress(githubToken string, ce amanar.AmanarConfigurationElement) {
 	log.Printf("\n\n\n\n =========================== [VAULT ADDRESS %s] =========================== \n\n", ce.VaultAddress)
 
-	ghc := &VaultGithubAuthClient{
+	ghc := &amanar.VaultGithubAuthClient{
 		GithubToken: githubToken,
 		VaultAddress: ce.VaultAddress,
 	}
-	err := ghc.loginWithGithub()
+	err := ghc.LoginWithGithub()
 	if err != nil {
 		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
 		return
 	}
 
 	for _, configItem := range ce.VaultConfiguration {
-		secret, err := ghc.getCredential(configItem.VaultPath, configItem.VaultRole)
+		secret, err := ghc.GetCredential(configItem.VaultPath, configItem.VaultRole)
 		if err != nil {
 			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
 			continue
 		}
 
-		credentials, err := CreateCredentialsFromSecret(secret)
+		credentials, err := amanar.CreateCredentialsFromSecret(secret)
 
 		if err != nil {
 			log.Printf("[VAULT AUTH] Could not convert Vault secret into Amanar credentials because %s. Skipping.", err)
@@ -41,13 +42,13 @@ func processVaultAddress(githubToken string, ce AmanarConfigurationElement) {
 		}
 
 		log.Printf("[VAULT CONFIGURATION] %v:%v", configItem.VaultPath, configItem.VaultRole)
-		ProcessConfigItem(&configItem.Configurables, credentials)
+		amanar.ProcessConfigItem(&configItem.Configurables, credentials)
 	}
 }
 
 //go:generate go-bindata amanar_config_schema.json
 func executeAmanar() {
-	configurationElements, err, resultErrors := LoadConfiguration(os.Getenv("CONFIG_FILEPATH"))
+	configurationElements, err, resultErrors := amanar.LoadConfiguration(os.Getenv("CONFIG_FILEPATH"))
 
 	if err != nil {
 		log.Fatalf("[CONFIG] Could not load configuration file: %s", err)

@@ -1,4 +1,4 @@
-package main
+package amanar
 
 type Flower interface {
 	Name() string

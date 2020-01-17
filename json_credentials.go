@@ -3,7 +3,7 @@
 //    jSONCredentials, err := UnmarshalJSONCredentials(bytes)
 //    bytes, err = jSONCredentials.Marshal()
 
-package main
+package amanar
 
 import "encoding/json"
 

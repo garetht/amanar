@@ -2,7 +2,7 @@
 // sources:
 // amanar_config_schema.json (11.869kB)
 
-package main
+package amanar
 
 import (
 	"bytes"
