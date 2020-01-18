@@ -10,8 +10,6 @@ func TestProcessConstantConfigItem(t *testing.T) {
 		constant Constant
 	}
 
-	s := "This is a constant template."
-	p := "./fixtures/constant_template.go.md"
 	tests := []struct {
 		name       string
 		args       args
@@ -20,7 +18,7 @@ func TestProcessConstantConfigItem(t *testing.T) {
 		{name: "Can render string from a Constant",
 			args: args{
 				constant: Constant{
-					Template: &s,
+					Template: stringPointer("This is a constant template."),
 				},
 			},
 			wantWriter: "This is a constant template.",
@@ -28,7 +26,7 @@ func TestProcessConstantConfigItem(t *testing.T) {
 		{name: "Can render file from a Constant",
 			args: args{
 				constant: Constant{
-					TemplatePath: &p,
+					TemplatePath: stringPointer("./fixtures/constant_template.go.md"),
 				},
 			},
 			wantWriter: `File Constant

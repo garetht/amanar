@@ -2,12 +2,12 @@ package amanar
 
 import (
 	"fmt"
+	"io"
 	"log"
-	"os"
 )
 
-func NewTemplateFlow(config *TemplateDatasource) (*TemplateFlow, error) {
-	source, err := NewTemplateSource(config, os.Stdout)
+func NewTemplateFlow(config *TemplateDatasource, writer io.Writer) (*TemplateFlow, error) {
+	source, err := NewTemplateSource(config, writer)
 	if err != nil {
 		return nil, fmt.Errorf("could not create template flow from template datasource: %s", err)
 	}
@@ -34,8 +34,8 @@ func (tf *TemplateFlow) UpdateWithCredentials(credentials *Credentials) error {
 }
 
 func (tf *TemplateFlow) PersistChanges() error {
-	// print to stdout
 	log.Printf("[%s DATASOURCE] Writing new username %s and password %s to template in stdout", tf.Name(), tf.credentials.Username, tf.credentials.Password)
+	// prints to the configured Writer
 	if err := tf.source.WriteToDisk(*tf.credentials); err != nil {
 		return err
 	}

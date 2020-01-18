@@ -14,17 +14,13 @@ func main() {
 	executeAmanar()
 }
 
-func processAmanarConfigurationElement(githubToken string, ac amanar.AmanarConfiguration) {
-	configurationProcessor, err := amanar.NewConfigurationProcessor(githubToken, ac)
-	if err != nil {
-		log.Fatalf("[PROCESS CONFIG] Could not process config: %s", err)
-	}
-
-	configurationProcessor.ProcessConfig()
-}
 
 func executeAmanar() {
-	configurationElements, err, resultErrors := amanar.LoadConfiguration(os.Getenv("CONFIG_FILEPATH"))
+	configFilepath := os.Getenv("CONFIG_FILEPATH")
+	if configFilepath == "" {
+		log.Fatalln("[CONFIG FILEPATH] Please provide a configuration file as the environment variable CONFIG_FILEPATH so we can retrieve the Amanar configuration.")
+	}
+	configuration, err, resultErrors := amanar.LoadConfiguration(configFilepath)
 
 	if err != nil {
 		log.Fatalf("[CONFIG] Could not load configuration file: %s", err)
@@ -32,11 +28,7 @@ func executeAmanar() {
 	}
 
 	if resultErrors != nil {
-		log.Println("[CONFIG SCHEMA] The provided configuration did not conform to the structure required by the JSON Schema.")
-		for _, resultErr := range resultErrors {
-			log.Printf("[CONFIG SCHEMA] At JSON location %s: %s", resultErr.Context().String(), resultErr.Description())
-		}
-		return
+		amanar.HandleResultErrors(resultErrors)
 	}
 
 	githubToken := os.Getenv("GITHUB_TOKEN")
@@ -45,7 +37,5 @@ func executeAmanar() {
 		return
 	}
 
-	for _, configurationElement := range configurationElements {
-		processAmanarConfigurationElement(githubToken, configurationElement)
-	}
+	amanar.ProcessAmanar(githubToken, configuration)
 }

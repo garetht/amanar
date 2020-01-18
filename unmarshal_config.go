@@ -31,7 +31,7 @@ func convertToJson(bytes []byte) ([]byte, error) {
 }
 
 //go:generate go-bindata -pkg amanar amanar_config_schema.json
-func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []gojsonschema.ResultError) {
+func LoadConfiguration(configFilepath string) (*Amanar, error, []gojsonschema.ResultError) {
 	bytes, err := ioutil.ReadFile(configFilepath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
@@ -45,12 +45,16 @@ func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []g
 	validator := NewJsonBytesSchemaValidator(configuration)
 	err, validationErrors := validator.Validate()
 
+	if err != nil {
+		return nil, fmt.Errorf("[JSON CONFIG SCHEMA VALIDATION] could not run validation for JSON: %w", err), nil
+	}
+
 	parsedConfiguration, err := unmarshalConfiguration(bytes)
 	if err != nil {
 		return nil, fmt.Errorf("could not load amanar configuration to struct: %w", err), nil
 	}
 
-	return parsedConfiguration.AmanarConfiguration, err, validationErrors
+	return parsedConfiguration, err, validationErrors
 }
 
 

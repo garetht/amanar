@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 )
 
 type ConfigurationProcessor interface {
@@ -16,6 +15,7 @@ type VaultConfigurationProcessor struct {
 	vaultGithubAuthClient *VaultGithubAuthClient
 	vaultAddress          string
 	vaultConfiguration    []VaultConfiguration
+	writer                io.Writer
 }
 
 func (v VaultConfigurationProcessor) ProcessConfig() {
@@ -42,19 +42,20 @@ func (v VaultConfigurationProcessor) ProcessConfig() {
 		}
 
 		log.Printf("[VAULT CONFIGURATION] %v:%v", configItem.VaultPath, configItem.VaultRole)
-		ProcessVaultConfigItem(&configItem.Configurables, credentials)
+		ProcessVaultConfigItem(&configItem.Configurables, credentials, v.writer)
 	}
 }
 
 type ConstantConfigurationProcessor struct {
 	constant Constant
+	writer   io.Writer
 }
 
 func (c ConstantConfigurationProcessor) ProcessConfig() {
-	ProcessConstantConfigItem(c.constant, os.Stdout)
+	ProcessConstantConfigItem(c.constant, c.writer)
 }
 
-func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration) (ConfigurationProcessor, error) {
+func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, writer io.Writer) (ConfigurationProcessor, error) {
 	if ac.Constant == nil && ac.VaultAddress == nil && ac.VaultConfiguration == nil {
 		return nil, fmt.Errorf("please provide either a Constant configuration or a Vault configuration")
 	}
@@ -71,12 +72,14 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration) (Conf
 			},
 			vaultAddress:       *ac.VaultAddress,
 			vaultConfiguration: ac.VaultConfiguration,
+			writer: writer,
 		}, nil
 	}
 
 	if ac.Constant != nil {
 		return ConstantConfigurationProcessor{
 			constant: *ac.Constant,
+			writer: writer,
 		}, nil
 	}
 
@@ -103,7 +106,7 @@ func ProcessConstantConfigItem(constant Constant, writer io.Writer) {
 	}
 }
 
-func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentials) {
+func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentials, writer io.Writer) {
 	var errs []error
 	var flows []Flower
 
@@ -171,7 +174,7 @@ func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentia
 	}
 
 	for _, templateConfig := range configurables.TemplateDatasources {
-		flow, err := NewTemplateFlow(&templateConfig)
+		flow, err := NewTemplateFlow(&templateConfig, writer)
 		if err != nil {
 			errs = append(errs, err)
 			continue
@@ -209,3 +212,4 @@ func UpdateCredentials(flows []Flower, credentials *Credentials) {
 		}
 	}
 }
+
