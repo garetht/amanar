@@ -65,6 +65,10 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, write
 	}
 
 	if ac.VaultAddress != nil && ac.VaultConfiguration != nil {
+		if githubToken == "" {
+			return nil, fmt.Errorf("[GITHUB AUTH] Please provide a valid GitHub token as the environment variable GITHUB_TOKEN so we can fetch new credentials.")
+		}
+
 		return VaultConfigurationProcessor{
 			vaultGithubAuthClient: &VaultGithubAuthClient{
 				GithubToken:  githubToken,

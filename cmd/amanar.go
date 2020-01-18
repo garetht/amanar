@@ -31,11 +31,8 @@ func executeAmanar() {
 		amanar.HandleResultErrors(resultErrors)
 	}
 
+	// The Github token is only needed if the configuration specifies
+	// Vault credentials are needed, which we will check for later.
 	githubToken := os.Getenv("GITHUB_TOKEN")
-	if githubToken == "" {
-		log.Fatalln("[GITHUB AUTH] Please provide a valid GitHub token as the environment variable GITHUB_TOKEN so we can fetch new credentials.")
-		return
-	}
-
 	amanar.ProcessAmanar(githubToken, configuration)
 }
