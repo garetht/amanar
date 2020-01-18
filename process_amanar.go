@@ -8,17 +8,6 @@ import (
 )
 
 func ProcessAmanarWithWriter(githubToken string, a *Amanar, writer io.Writer) {
-	structValidator := NewStructSchemaValidator(a)
-	err, resultErrors := structValidator.Validate()
-
-	if err != nil {
-		log.Fatalf("[STRUCT CONFIG SCHEMA VALIDATION] could not run struct validation on Amanar config: %s", err)
-	}
-
-	if resultErrors != nil {
-		HandleResultErrors(resultErrors)
-	}
-
 	for _, configurationElement := range a.AmanarConfiguration {
 		configurationProcessor, err := NewConfigurationProcessor(githubToken, configurationElement, writer)
 		if err != nil {
