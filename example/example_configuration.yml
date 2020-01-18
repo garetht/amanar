@@ -1,7 +1,9 @@
+x-anchors:
+  &anchor example_vault_path
 amanar_configuration:
   - vault_address: 'http://vault.prod'
     vault_configuration:
-      - vault_path: example_vault_path
+      - vault_path: *anchor
         vault_role: example_vault_role
         configurables:
           intellij_datasources:
