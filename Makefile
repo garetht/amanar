@@ -5,6 +5,7 @@ main := cmd/amanar.go
 
 ld_flags := -X 'main.GitCommit=$(commit)' -X 'main.BuildDate=$(build_date)' -X 'main.GitTag=$(tag)'
 
+export
 
 PHONY: generate
 generate:
