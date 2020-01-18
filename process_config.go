@@ -2,6 +2,7 @@ package amanar
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 )
@@ -50,7 +51,7 @@ type ConstantConfigurationProcessor struct {
 }
 
 func (c ConstantConfigurationProcessor) ProcessConfig() {
-	ProcessConstantConfigItem(c.constant)
+	ProcessConstantConfigItem(c.constant, os.Stdout)
 }
 
 func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration) (ConfigurationProcessor, error) {
@@ -82,10 +83,10 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration) (Conf
 	return nil, fmt.Errorf("please provide a full Constant configuration or a full Vault configuration")
 }
 
-func ProcessConstantConfigItem(constant Constant) {
+func ProcessConstantConfigItem(constant Constant, writer io.Writer) {
 	var errs []error
 
-	templateSource, err := NewTemplateSource(&constant, os.Stdout)
+	templateSource, err := NewTemplateSource(&constant, writer)
 	if err != nil {
 		errs = append(errs, fmt.Errorf("could not create new template source: %w", err))
 	}
