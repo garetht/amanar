@@ -50,7 +50,7 @@ type ConstantConfigurationProcessor struct {
 }
 
 func (c ConstantConfigurationProcessor) ProcessConfig() {
-	panic("implement me")
+	ProcessConstantConfigItem(c.constant)
 }
 
 func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration) (ConfigurationProcessor, error) {
