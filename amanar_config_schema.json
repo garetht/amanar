@@ -3,10 +3,12 @@
   "required": [
     "amanar_configuration"
   ],
-  "additionalProperties": {
-    "description": "Properties prefixed with x- will be allowed in the top level of this schema, but will not be used or checked. This allows for anchors to be inserted for the reuse of parts of the YAML file. This is analogous to and based on Docker Compose's Extension Fields (https://docs.docker.com/compose/compose-file/#extension-fields).",
-    "pattern": "^x-*"
+  "patternProperties": {
+    "^x-.*": {
+      "description": "Properties prefixed with x- will be allowed in the top level of this schema, but will not be used or checked. This allows for anchors to be inserted for the reuse of parts of the YAML file. This is analogous to and based on Docker Compose's Extension Fields (https://docs.docker.com/compose/compose-file/#extension-fields)."
+    }
   },
+  "additionalProperties": false,
   "properties": {
     "amanar_configuration": {
       "type": "array",
@@ -251,7 +253,7 @@
                       }
                     },
                     "template_datasources": {
-                      "description": "Fills credentials into a provided Go template string or template file and prints the result to stdout. Unlike the other datasources, templates are generated anew each time and do not attempt to find previously existing keys to modify. Go templates are documented here: https://golang.org/pkg/text/template/",
+                      "description": "Fills credentials into a provided Go template string or template file and prints the result to stdout. The Credentials object is set as the dot context and its fields (.Username and .Password) are available. Unlike the other datasources, templates are generated anew each time and do not attempt to find previously existing keys to modify. Go templates are documented here: https://golang.org/pkg/text/template/",
                       "type": [
                         "array",
                         "null"

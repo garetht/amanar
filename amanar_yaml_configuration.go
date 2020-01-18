@@ -8,6 +8,12 @@ func UnmarshalYamlAmanarConfiguration(data []byte) (Amanar, error) {
 	return r, err
 }
 
+func DynamicUnmarshalYamlAmanarConfiguration(data []byte) (map[interface{}]interface{}, error) {
+	var r map[interface{}]interface{}
+	err := yaml.Unmarshal(data, &r)
+	return r, err
+}
+
 func (r *AmanarConfiguration) MarshalYaml() ([]byte, error) {
 	return yaml.Marshal(r)
 }

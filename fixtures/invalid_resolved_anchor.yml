@@ -1,0 +1,11 @@
+x-anchors:
+  &anchor 124
+amanar_configuration:
+  - vault_address: 'http://vault.prod'
+    vault_configuration:
+      - vault_path: *anchor
+        vault_role: example_vault_role
+        configurables:
+          intellij_datasources:
+            - datasource_file_path: /full/path
+              database_uuid: 1234-32123
