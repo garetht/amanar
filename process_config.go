@@ -1,7 +1,9 @@
 package amanar
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/icza/dyno"
 	"io/ioutil"
 	"log"
 
@@ -105,6 +107,18 @@ func unmarshalConfiguration(bytes []byte) (*Amanar, error) {
 	return &c, err
 }
 
+func convertToJson(bytes []byte) ([]byte, error) {
+	c, err := DynamicUnmarshalYamlAmanarConfiguration(bytes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalableMap := dyno.ConvertMapI2MapS(c)
+
+	return json.Marshal(marshalableMap)
+}
+
 //go:generate go-bindata -pkg amanar amanar_config_schema.json
 func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []gojsonschema.ResultError) {
 	bytes, err := ioutil.ReadFile(configFilepath)
@@ -112,37 +126,22 @@ func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []g
 		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
 	}
 
-	configuration, err := unmarshalConfiguration(bytes)
+	configuration, err := convertToJson(bytes)
 	if err != nil {
-		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
+		return nil, fmt.Errorf("could not load amanar configuration to JSON for validation: %w", err), nil
 	}
 
-	err, validationErrors := ValidateConfiguration(configuration)
+	validator := NewJsonBytesSchemaValidator(configuration)
+	err, validationErrors := validator.Validate()
 
-	return configuration.AmanarConfiguration, err, validationErrors
+	parsedConfiguration, err := unmarshalConfiguration(bytes)
+	if err != nil {
+		return nil, fmt.Errorf("could not load amanar configuration to struct: %w", err), nil
+	}
+
+	return parsedConfiguration.AmanarConfiguration, err, validationErrors
 }
 
-func ValidateConfiguration(configuration *Amanar) (err error, re []gojsonschema.ResultError) {
-	schema, err := Asset("amanar_config_schema.json")
-	if err != nil {
-		return fmt.Errorf("could not load schema assets: %w", err), nil
-	}
-
-	// We validate the Go document in order to be able to use gojsonschema to validate YAML
-	documentLoader := gojsonschema.NewGoLoader(configuration)
-	schemaLoader := gojsonschema.NewBytesLoader(schema)
-	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-	if err != nil {
-		return fmt.Errorf("was not able to run validation on schema: %w", err), nil
-	}
-
-	if !result.Valid() {
-		re = result.Errors()
-		return
-	}
-
-	return
-}
 
 func UpdateCredentials(flows []Flower, credentials *Credentials) {
 	var err error

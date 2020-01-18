@@ -8,6 +8,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/vault/api v1.0.4
+	github.com/icza/dyno v0.0.0-20180601094105-0c96289f9585
 	github.com/keybase/go-keychain v0.0.0-20191220220820-f65a47cbe0b1
 	github.com/mattn/go-sqlite3 v2.0.2+incompatible
 	github.com/mvdan/sh v2.6.4+incompatible
