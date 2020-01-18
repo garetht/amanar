@@ -1,8 +1,9 @@
 commit := $$(git rev-list -1 HEAD)
 build_date := $$(date)
+tag := $$(git describe --tags)
 main := cmd/amanar.go
 
-ld_flags := -X 'main.GitCommit=$(commit)' -X 'main.BuildDate=$(build_date)'
+ld_flags := -X 'main.GitCommit=$(commit)' -X 'main.BuildDate=$(build_date)' -X 'main.GitTag=$(tag)'
 
 export
 
