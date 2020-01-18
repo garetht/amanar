@@ -1,16 +1,112 @@
 package amanar
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/icza/dyno"
-	"io/ioutil"
+	"io"
 	"log"
-
-	"github.com/xeipuuv/gojsonschema"
 )
 
-func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
+type ConfigurationProcessor interface {
+	ProcessConfig()
+}
+
+type VaultConfigurationProcessor struct {
+	credentials           *Credentials
+	vaultGithubAuthClient *VaultGithubAuthClient
+	vaultAddress          string
+	vaultConfiguration    []VaultConfiguration
+	writer                io.Writer
+}
+
+func (v VaultConfigurationProcessor) ProcessConfig() {
+	log.Printf("\n\n\n\n =========================== [VAULT ADDRESS %s] =========================== \n\n", v.vaultAddress)
+
+	err := v.vaultGithubAuthClient.LoginWithGithub()
+	if err != nil {
+		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
+		return
+	}
+
+	for _, configItem := range v.vaultConfiguration {
+		secret, err := v.vaultGithubAuthClient.GetCredential(configItem.VaultPath, configItem.VaultRole)
+		if err != nil {
+			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
+			continue
+		}
+
+		credentials, err := CreateCredentialsFromSecret(secret)
+
+		if err != nil {
+			log.Printf("[VAULT AUTH] Could not convert Vault secret into Amanar credentials because %s. Skipping.", err)
+			continue
+		}
+
+		log.Printf("[VAULT CONFIGURATION] %v:%v", configItem.VaultPath, configItem.VaultRole)
+		ProcessVaultConfigItem(&configItem.Configurables, credentials, v.writer)
+	}
+}
+
+type ConstantConfigurationProcessor struct {
+	constant Constant
+	writer   io.Writer
+}
+
+func (c ConstantConfigurationProcessor) ProcessConfig() {
+	ProcessConstantConfigItem(c.constant, c.writer)
+}
+
+func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, writer io.Writer) (ConfigurationProcessor, error) {
+	if ac.Constant == nil && ac.VaultAddress == nil && ac.VaultConfiguration == nil {
+		return nil, fmt.Errorf("please provide either a Constant configuration or a Vault configuration")
+	}
+
+	if ac.Constant != nil && ac.VaultAddress != nil && ac.VaultConfiguration != nil {
+		return nil, fmt.Errorf("please provide only one of a Constant configuration and a Vault configuration")
+	}
+
+	if ac.VaultAddress != nil && ac.VaultConfiguration != nil {
+		return VaultConfigurationProcessor{
+			vaultGithubAuthClient: &VaultGithubAuthClient{
+				GithubToken:  githubToken,
+				VaultAddress: *ac.VaultAddress,
+			},
+			vaultAddress:       *ac.VaultAddress,
+			vaultConfiguration: ac.VaultConfiguration,
+			writer: writer,
+		}, nil
+	}
+
+	if ac.Constant != nil {
+		return ConstantConfigurationProcessor{
+			constant: *ac.Constant,
+			writer: writer,
+		}, nil
+	}
+
+	return nil, fmt.Errorf("please provide a full Constant configuration or a full Vault configuration")
+}
+
+func ProcessConstantConfigItem(constant Constant, writer io.Writer) {
+	var errs []error
+
+	templateSource, err := NewTemplateSource(&constant, writer)
+	if err != nil {
+		errs = append(errs, fmt.Errorf("could not create new template source: %w", err))
+	}
+
+	err = templateSource.WriteToDiskWithoutContext()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("could not write constant to disk: %w", err))
+	}
+
+	if len(errs) > 0 {
+		for _, err := range errs {
+			log.Printf("[CONSTANT PROCESSING] Encountered errors processing constant: %#v. Processing constants that worked.", err)
+		}
+	}
+}
+
+func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentials, writer io.Writer) {
 	var errs []error
 	var flows []Flower
 
@@ -38,7 +134,8 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 			errs = append(errs, err)
 			continue
 		}
-		flows = append(flows, flow)	}
+		flows = append(flows, flow)
+	}
 
 	for _, sequelProConfig := range configurables.SequelProDatasources {
 		flow, err := NewSequelProFlow(&sequelProConfig)
@@ -77,14 +174,13 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	}
 
 	for _, templateConfig := range configurables.TemplateDatasources {
-		flow, err := NewTemplateFlow(&templateConfig)
+		flow, err := NewTemplateFlow(&templateConfig, writer)
 		if err != nil {
 			errs = append(errs, err)
 			continue
 		}
 		flows = append(flows, flow)
 	}
-
 
 	if len(errs) > 0 {
 		for _, err := range errs {
@@ -96,52 +192,6 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 
 	return
 }
-
-func unmarshalConfiguration(bytes []byte) (*Amanar, error) {
-	c, err := UnmarshalYamlAmanarConfiguration(bytes)
-
-	if err != nil {
-		return nil, fmt.Errorf("could not unmarshal amanar configuration: %w", err)
-	}
-
-	return &c, err
-}
-
-func convertToJson(bytes []byte) ([]byte, error) {
-	c, err := DynamicUnmarshalYamlAmanarConfiguration(bytes)
-
-	if err != nil {
-		return nil, err
-	}
-
-	marshalableMap := dyno.ConvertMapI2MapS(c)
-
-	return json.Marshal(marshalableMap)
-}
-
-//go:generate go-bindata -pkg amanar amanar_config_schema.json
-func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []gojsonschema.ResultError) {
-	bytes, err := ioutil.ReadFile(configFilepath)
-	if err != nil {
-		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
-	}
-
-	configuration, err := convertToJson(bytes)
-	if err != nil {
-		return nil, fmt.Errorf("could not load amanar configuration to JSON for validation: %w", err), nil
-	}
-
-	validator := NewJsonBytesSchemaValidator(configuration)
-	err, validationErrors := validator.Validate()
-
-	parsedConfiguration, err := unmarshalConfiguration(bytes)
-	if err != nil {
-		return nil, fmt.Errorf("could not load amanar configuration to struct: %w", err), nil
-	}
-
-	return parsedConfiguration.AmanarConfiguration, err, validationErrors
-}
-
 
 func UpdateCredentials(flows []Flower, credentials *Credentials) {
 	var err error
@@ -162,3 +212,4 @@ func UpdateCredentials(flows []Flower, credentials *Credentials) {
 		}
 	}
 }
+

@@ -16,6 +16,10 @@ func (t TemplateSource) WriteToDisk(credentials Credentials) error {
 	return t.t.Execute(t.writer, credentials)
 }
 
+func (t TemplateSource) WriteToDiskWithoutContext() error {
+	return t.t.Execute(t.writer, nil)
+}
+
 func NewTemplateSourceFromFile(templateFilepath *string, writer io.Writer) (*TemplateSource, error) {
 	t, err := template.ParseFiles(*templateFilepath)
 	if err != nil {

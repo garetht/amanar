@@ -72,12 +72,11 @@ To add support for a new data source, do the following:
 
 We use quicktype to generate the configuration types from the provided JSON schema. Quicktype can be installed from NPM with `npm install -g quicktype`.
 
-To regenerate the types, run `npx quicktype --src-lang schema amanar_config_schema.json --package amanar --top-level Amanar --lang go | sed -E -e 's/json:"(.+)"/json:"\1" yaml:"\1"/g' > amanar_configuration.go`.
 
-To regenerate this file when the data is updated, run `go generate`.
+To regenerate this file when the data is updated, run `go generate` (located in `amanar_yaml_configuration.go`)
 
 ## Developing: Regenerating Bindata
 
 We compile the JSON Schema for the Amanar configuration into the Go binary for convenience using `go-bindata` (`brew install go-bindata`, https://github.com/kevinburke/go-bindata)
 
-To regenerate this file when the data is updated, run `go generate`.
+To regenerate this file when the data is updated, run `go generate` (located in `process_config.go`).

@@ -23,8 +23,17 @@ type Amanar struct {
 }
 
 type AmanarConfiguration struct {
-	VaultAddress       string               `json:"vault_address" yaml:"vault_address"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
-	VaultConfiguration []VaultConfiguration `json:"vault_configuration" yaml:"vault_configuration"`
+	Constant           *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`     // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
+	VaultAddress       *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`// The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
+	VaultConfiguration []VaultConfiguration `json:"vault_configuration" yaml:"vault_configuration"`    
+}
+
+// Amanar is able to render constants, which are pieces of information that do not depend on
+// Vault. This allows Amanar to be used to configure local static credentials in addition to
+// Vault-derived ones.
+type Constant struct {
+	Template     *string `json:"template,omitempty" yaml:"template,omitempty"`     // A constant Go template string that will be rendered.
+	TemplatePath *string `json:"template_path,omitempty" yaml:"template_path,omitempty"`// A path to a Go template file that will be rendered.
 }
 
 // A list of vault roles and paths and configuration options for output to data sources
@@ -43,7 +52,7 @@ type Configurables struct {
 	Querious2Datasources      []Querious2Datasource      `json:"querious2_datasources" yaml:"querious2_datasources"`      // Allows changes to database access credentials stored in a Querious 2 SQLite database.
 	SequelProDatasources      []SequelProDatasource      `json:"sequel_pro_datasources" yaml:"sequel_pro_datasources"`     // Allows changes to database access credentials for Sequel Pro plists.
 	ShellDatasources          []ShellDatasource          `json:"shell_datasources" yaml:"shell_datasources"`          // Allows a file to be generated in a shell script that contains exports of environment; variables containing the new credentials.
-	TemplateDatasources       []TemplateDatasource       `json:"template_datasources" yaml:"template_datasources"`       // Fills credentials into a provided Go template string or template file and prints the; result to stdout. Unlike the other datasources, templates are generated anew each time; and do not attempt to find previously existing keys to modify. Go templates are; documented here: https://golang.org/pkg/text/template/
+	TemplateDatasources       []TemplateDatasource       `json:"template_datasources" yaml:"template_datasources"`       // Fills credentials into a provided Go template string or template file and prints the; result to stdout. The Credentials object is set as the dot context and its fields; (.Username and .Password) are available. Unlike the other datasources, templates are; generated anew each time and do not attempt to find previously existing keys to modify.; Go templates are documented here: https://golang.org/pkg/text/template/
 }
 
 type IntellijDatasource struct {
