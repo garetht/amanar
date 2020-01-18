@@ -47,7 +47,7 @@ func TestLoadConfiguration(t *testing.T) {
 				t.Errorf("ValidateConfiguration() gotErr = %v, want %v", gotErr, tt.wantErr)
 			}
 			if (len(gotRe) > 0) != tt.hasErrors {
-				t.Errorf("ValidateConfiguration() gotRe = %v, hasErrors %t", gotRe, tt.hasErrors)
+				t.Errorf("ValidateConfiguration() got errors = %v, but wanted has errors %t", gotRe, tt.hasErrors)
 			}
 		})
 	}

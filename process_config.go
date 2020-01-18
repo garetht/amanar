@@ -95,17 +95,18 @@ func ProcessConfigItem(configurables *Configurables, credentials *Credentials) {
 	return
 }
 
-func unmarshalConfiguration(bytes []byte) (c AmanarConfiguration, err error) {
-	c, err = UnmarshalYamlAmanarConfiguration(bytes)
+func unmarshalConfiguration(bytes []byte) (*Amanar, error) {
+	c, err := UnmarshalYamlAmanarConfiguration(bytes)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal amanar configuration: %w", err)
 	}
 
-	return c, err
+	return &c, err
 }
 
-func LoadConfiguration(configFilepath string) (AmanarConfiguration, error, []gojsonschema.ResultError) {
+//go:generate go-bindata -pkg amanar amanar_config_schema.json
+func LoadConfiguration(configFilepath string) ([]AmanarConfiguration, error, []gojsonschema.ResultError) {
 	bytes, err := ioutil.ReadFile(configFilepath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read amanar configuration file: %w", err), nil
@@ -116,12 +117,12 @@ func LoadConfiguration(configFilepath string) (AmanarConfiguration, error, []goj
 		return nil, fmt.Errorf("could not load amanar configuration: %w", err), nil
 	}
 
-	err, validationErrors := ValidateConfiguration(&configuration)
+	err, validationErrors := ValidateConfiguration(configuration)
 
-	return configuration, err, validationErrors
+	return configuration.AmanarConfiguration, err, validationErrors
 }
 
-func ValidateConfiguration(configuration *AmanarConfiguration) (err error, re []gojsonschema.ResultError) {
+func ValidateConfiguration(configuration *Amanar) (err error, re []gojsonschema.ResultError) {
 	schema, err := Asset("amanar_config_schema.json")
 	if err != nil {
 		return fmt.Errorf("could not load schema assets: %w", err), nil

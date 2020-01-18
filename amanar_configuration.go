@@ -1,26 +1,28 @@
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse and unparse this JSON data, add this code to your project and do:
 //
-//    amanarConfiguration, err := UnmarshalAmanarConfiguration(bytes)
-//    bytes, err = amanarConfiguration.Marshal()
+//    amanar, err := UnmarshalAmanar(bytes)
+//    bytes, err = amanar.Marshal()
 
 package amanar
 
 import "encoding/json"
 
-type AmanarConfiguration []AmanarConfigurationElement
-
-func UnmarshalAmanarConfiguration(data []byte) (AmanarConfiguration, error) {
-	var r AmanarConfiguration
+func UnmarshalAmanar(data []byte) (Amanar, error) {
+	var r Amanar
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
-func (r *AmanarConfiguration) Marshal() ([]byte, error) {
+func (r *Amanar) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-type AmanarConfigurationElement struct {
+type Amanar struct {
+	AmanarConfiguration []AmanarConfiguration `json:"amanar_configuration" yaml:"amanar_configuration"`
+}
+
+type AmanarConfiguration struct {
 	VaultAddress       string               `json:"vault_address" yaml:"vault_address"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
 	VaultConfiguration []VaultConfiguration `json:"vault_configuration" yaml:"vault_configuration"`
 }
