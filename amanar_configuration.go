@@ -32,7 +32,8 @@ type AmanarConfiguration struct {
 // Vault. This allows Amanar to be used to configure local static credentials in addition to
 // Vault-derived ones.
 type Constant struct {
-	Template string `json:"template" yaml:"template"`
+	Template     *string `json:"template,omitempty" yaml:"template,omitempty"`     // A constant Go template string that will be rendered.
+	TemplatePath *string `json:"template_path,omitempty" yaml:"template_path,omitempty"`// A path to a Go template file that will be rendered.
 }
 
 // A list of vault roles and paths and configuration options for output to data sources

@@ -26,9 +26,26 @@
           "constant": {
             "description": "Amanar is able to render constants, which are pieces of information that do not depend on Vault. This allows Amanar to be used to configure local static credentials in addition to Vault-derived ones.",
             "type": "object",
-            "required": ["template"],
+            "oneOf": [
+              {
+                "required": [
+                  "template_path"
+                ]
+              },
+              {
+                "required": [
+                  "template"
+                ]
+              }
+            ],
+            "additionalProperties": false,
             "properties": {
               "template": {
+                "description": "A constant Go template string that will be rendered.",
+                "type": "string"
+              },
+              "template_path": {
+                "description": "A path to a Go template file that will be rendered.",
                 "type": "string"
               }
             }

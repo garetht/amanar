@@ -7,27 +7,9 @@ import (
 )
 
 func NewTemplateFlow(config *TemplateDatasource) (*TemplateFlow, error) {
-	if config.Template == nil && config.TemplatePath == nil {
-		return nil, fmt.Errorf("neither template nor template path were provided")
-	}
-
-	if config.Template != nil && config.TemplatePath != nil {
-		return nil, fmt.Errorf("provide at most one of template or template path")
-	}
-
-
-	var err error
-	var source *TemplateSource
-
-	writer := os.Stdout
-	if config.Template != nil {
-		source, err = NewTemplateSourceFromString(config.Template, writer)
-	} else {
-		source, err = NewTemplateSourceFromFile(config.TemplatePath, writer)
-	}
-
+	source, err := NewTemplateSource(config, os.Stdout)
 	if err != nil {
-		return nil, fmt.Errorf("couldn not parse template: %w", err)
+		return nil, fmt.Errorf("could not create template flow from template datasource: %s", err)
 	}
 
 	return &TemplateFlow{
