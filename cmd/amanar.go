@@ -29,6 +29,7 @@ func executeAmanar() {
 
 	if resultErrors != nil {
 		amanar.HandleResultErrors(resultErrors)
+		return
 	}
 
 	// The Github token is only needed if the configuration specifies

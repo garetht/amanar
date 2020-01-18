@@ -83,10 +83,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "intellij_datasources": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "description": "Allows IntelliJ datasource usernames and passwords to be changed. Most useful for DataGrip and databases within IntelliJ Ultimate.",
                       "items": {
                         "type": "object",
@@ -110,10 +107,7 @@
                       }
                     },
                     "intellij_run_configurations": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "description": "Allows changes to database access credentials within IntelliJ run configurations.",
                       "items": {
                         "type": "object",
@@ -143,10 +137,7 @@
                       }
                     },
                     "querious2_datasources": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "description": "Allows changes to database access credentials stored in a Querious 2 SQLite database.",
                       "items": {
                         "type": "object",
@@ -170,10 +161,7 @@
                       }
                     },
                     "sequel_pro_datasources": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "description": "Allows changes to database access credentials for Sequel Pro plists.",
                       "items": {
                         "type": "object",
@@ -197,10 +185,7 @@
                       }
                     },
                     "postico_datasources": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
                       "items": {
                         "type": "object",
@@ -225,10 +210,7 @@
                     },
                     "shell_datasources": {
                       "description": "Allows a file to be generated in a shell script that contains exports of environment variables containing the new credentials.",
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "items": {
                         "type": "object",
                         "additionalProperties": false,
@@ -258,10 +240,7 @@
                     },
                     "json_datasources": {
                       "description": "Allows a JSON file to be generated containing usernames and passwords.",
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "items": {
                         "type": "object",
                         "additionalProperties": false,
@@ -285,10 +264,7 @@
                     },
                     "template_datasources": {
                       "description": "Fills credentials into a provided Go template string or template file and prints the result to stdout. The Credentials object is set as the dot context and its fields (.Username and .Password) are available. Unlike the other datasources, templates are generated anew each time and do not attempt to find previously existing keys to modify. Go templates are documented here: https://golang.org/pkg/text/template/",
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": "array",
                       "items": {
                         "type": "object",
                         "additionalProperties": false,
