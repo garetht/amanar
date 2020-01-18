@@ -128,6 +128,7 @@ func ValidateConfiguration(configuration *Amanar) (err error, re []gojsonschema.
 		return fmt.Errorf("could not load schema assets: %w", err), nil
 	}
 
+	// We validate the Go document in order to be able to use gojsonschema to validate YAML
 	documentLoader := gojsonschema.NewGoLoader(configuration)
 	schemaLoader := gojsonschema.NewBytesLoader(schema)
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
