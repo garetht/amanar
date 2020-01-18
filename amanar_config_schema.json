@@ -14,11 +14,25 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "vault_address",
-          "vault_configuration"
+        "oneOf": [
+          {
+            "required": ["vault_address", "vault_configuration"]
+          },
+          {
+            "required": ["constant"]
+          }
         ],
         "properties": {
+          "constant": {
+            "description": "Amanar is able to render constants, which are pieces of information that do not depend on Vault. This allows Amanar to be used to configure local static credentials in addition to Vault-derived ones.",
+            "type": "object",
+            "required": ["template"],
+            "properties": {
+              "template": {
+                "type": "string"
+              }
+            }
+          },
           "vault_address": {
             "description": "The address to a particular vault. Vault addresses usually differ for different environments. For example, we may have one vault address for production and another for staging.",
             "type": "string",
