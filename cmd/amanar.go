@@ -7,10 +7,11 @@ import (
 )
 
 var GitCommit string
+var GitTag string
 var BuildDate string
 
 func main() {
-	log.Printf("Amanar. version: %s, built: %s", GitCommit, BuildDate)
+	log.Printf("Amanar %s. sha: %s. built: %s.\n\n", GitTag, GitCommit, BuildDate)
 	executeAmanar()
 }
 
