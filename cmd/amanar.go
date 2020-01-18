@@ -14,7 +14,7 @@ func main() {
 	executeAmanar()
 }
 
-func processVaultAddress(githubToken string, ce amanar.AmanarConfigurationElement) {
+func processVaultAddress(githubToken string, ce amanar.AmanarConfiguration) {
 	log.Printf("\n\n\n\n =========================== [VAULT ADDRESS %s] =========================== \n\n", ce.VaultAddress)
 
 	ghc := &amanar.VaultGithubAuthClient{
@@ -46,7 +46,6 @@ func processVaultAddress(githubToken string, ce amanar.AmanarConfigurationElemen
 	}
 }
 
-//go:generate go-bindata amanar_config_schema.json
 func executeAmanar() {
 	configurationElements, err, resultErrors := amanar.LoadConfiguration(os.Getenv("CONFIG_FILEPATH"))
 

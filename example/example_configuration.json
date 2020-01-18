@@ -1,57 +1,59 @@
-[
-  {
-    "vault_address": "http://vault.prod",
-    "vault_configuration": [
-      {
-        "vault_path": "example_vault_path",
-        "vault_role": "example_vault_role",
-        "configurables": {
-          "intellij_datasources": [
-            {
-              "datasource_file_path": "/full/path",
-              "database_uuid": "1234-32123"
-            }
-          ],
-          "intellij_run_configurations": [
-            {
-              "run_configurations_folder_path": "/full/path",
-              "environment_variable": "thing",
-              "database_host": "database.service.stag"
-            }
-          ],
-          "querious2_datasources": [
-            {
-              "querious2_sqlite_path": "/path/to/database.sqlite",
-              "database_uuid": "1234A-2234B-3234C"
-            }
-          ],
-          "sequel_pro_datasources": [
-            {
-              "sequel_pro_plist_path": "/path/to/sequel/pro.plist",
-              "database_uuid": "120309129302"
-            }
-          ],
-          "json_datasources": [
-            {
-              "filepath": "/path/to/json.json",
-              "identifier": "path-role"
-            }
-          ],
-          "postico_datasources": [
-            {
-              "database_uuid": "1234",
-              "postico_sqlite_path": "/path/to/postico"
-            }
-          ],
-          "shell_datasources": [
-            {
-              "filepath": "/shell/path",
-              "password_variable": "PASS",
-              "username_variable": "USERNAME"
-            }
-          ]
+{
+  "amanar_configuration": [
+    {
+      "vault_address": "http://vault.prod",
+      "vault_configuration": [
+        {
+          "vault_path": "example_vault_path",
+          "vault_role": "example_vault_role",
+          "configurables": {
+            "intellij_datasources": [
+              {
+                "datasource_file_path": "/full/path",
+                "database_uuid": "1234-32123"
+              }
+            ],
+            "intellij_run_configurations": [
+              {
+                "run_configurations_folder_path": "/full/path",
+                "environment_variable": "thing",
+                "database_host": "database.service.stag"
+              }
+            ],
+            "querious2_datasources": [
+              {
+                "querious2_sqlite_path": "/path/to/database.sqlite",
+                "database_uuid": "1234A-2234B-3234C"
+              }
+            ],
+            "sequel_pro_datasources": [
+              {
+                "sequel_pro_plist_path": "/path/to/sequel/pro.plist",
+                "database_uuid": "120309129302"
+              }
+            ],
+            "json_datasources": [
+              {
+                "filepath": "/path/to/json.json",
+                "identifier": "path-role"
+              }
+            ],
+            "postico_datasources": [
+              {
+                "database_uuid": "1234",
+                "postico_sqlite_path": "/path/to/postico"
+              }
+            ],
+            "shell_datasources": [
+              {
+                "filepath": "/shell/path",
+                "password_variable": "PASS",
+                "username_variable": "USERNAME"
+              }
+            ]
+          }
         }
-      }
-    ]
-  }
-]
+      ]
+    }
+  ]
+}

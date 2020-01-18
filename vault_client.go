@@ -25,7 +25,10 @@ func (vc *VaultGithubAuthClient) LoginWithGithub() error {
 	if err != nil {
 		return err
 	}
-	c.SetAddress(vc.VaultAddress)
+	err = c.SetAddress(vc.VaultAddress)
+	if err != nil {
+		return err
+	}
 
 	// The raw version requires the /v1, while the logical reads
 	// do not need it.
