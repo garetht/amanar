@@ -153,6 +153,15 @@ func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentia
 		flows = append(flows, flow)
 	}
 
+	for _, sequelAceConfig := range configurables.SequelAceDatasources {
+		flow, err := NewSequelAceFlow(&sequelAceConfig)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		flows = append(flows, flow)
+	}
+
 	for _, posticoConfig := range configurables.PosticoDatasources {
 		flow, err := NewPosticoFlow(&posticoConfig)
 		if err != nil {

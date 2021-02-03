@@ -16,10 +16,15 @@
         "type": "object",
         "oneOf": [
           {
-            "required": ["vault_address", "vault_configuration"]
+            "required": [
+              "vault_address",
+              "vault_configuration"
+            ]
           },
           {
-            "required": ["constant"]
+            "required": [
+              "constant"
+            ]
           }
         ],
         "properties": {
@@ -184,6 +189,30 @@
                         }
                       }
                     },
+                    "sequel_ace_datasources": {
+                      "type": "array",
+                      "description": "Allows changes to database access credentials for Sequel Ace plists.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "sequel_ace_plist_path",
+                          "database_uuid"
+                        ],
+                        "properties": {
+                          "sequel_ace_plist_path": {
+                            "description": "Path to the plist in which Sequel Ace stores its data. The file is typically called Favorites.plist",
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "database_uuid": {
+                            "description": "The unique identifier for the Sequel Ace database to update. Can be found by looking in the plist.",
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    },
                     "postico_datasources": {
                       "type": "array",
                       "description": "Allows changes to database access credentials stored in a Postico SQLite database.",
@@ -304,6 +333,3 @@
     }
   }
 }
-
-
-

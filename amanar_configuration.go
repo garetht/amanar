@@ -23,9 +23,9 @@ type Amanar struct {
 }
 
 type AmanarConfiguration struct {
-	Constant           *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`     // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
-	VaultAddress       *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`// The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
-	VaultConfiguration []VaultConfiguration `json:"vault_configuration" yaml:"vault_configuration"`    
+	Constant           *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`           // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
+	VaultAddress       *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
+	VaultConfiguration []VaultConfiguration `json:"vault_configuration,omitempty" yaml:"vault_configuration,omitempty"`
 }
 
 // Amanar is able to render constants, which are pieces of information that do not depend on
@@ -45,14 +45,15 @@ type VaultConfiguration struct {
 }
 
 type Configurables struct {
-	IntellijDatasources       []IntellijDatasource       `json:"intellij_datasources" yaml:"intellij_datasources"`       // Allows IntelliJ datasource usernames and passwords to be changed. Most useful for; DataGrip and databases within IntelliJ Ultimate.
-	IntellijRunConfigurations []IntellijRunConfiguration `json:"intellij_run_configurations" yaml:"intellij_run_configurations"`// Allows changes to database access credentials within IntelliJ run configurations.
-	JSONDatasources           []JSONDatasource           `json:"json_datasources" yaml:"json_datasources"`           // Allows a JSON file to be generated containing usernames and passwords.
-	PosticoDatasources        []PosticoDatasource        `json:"postico_datasources" yaml:"postico_datasources"`        // Allows changes to database access credentials stored in a Postico SQLite database.
-	Querious2Datasources      []Querious2Datasource      `json:"querious2_datasources" yaml:"querious2_datasources"`      // Allows changes to database access credentials stored in a Querious 2 SQLite database.
-	SequelProDatasources      []SequelProDatasource      `json:"sequel_pro_datasources" yaml:"sequel_pro_datasources"`     // Allows changes to database access credentials for Sequel Pro plists.
-	ShellDatasources          []ShellDatasource          `json:"shell_datasources" yaml:"shell_datasources"`          // Allows a file to be generated in a shell script that contains exports of environment; variables containing the new credentials.
-	TemplateDatasources       []TemplateDatasource       `json:"template_datasources" yaml:"template_datasources"`       // Fills credentials into a provided Go template string or template file and prints the; result to stdout. The Credentials object is set as the dot context and its fields; (.Username and .Password) are available. Unlike the other datasources, templates are; generated anew each time and do not attempt to find previously existing keys to modify.; Go templates are documented here: https://golang.org/pkg/text/template/
+	IntellijDatasources       []IntellijDatasource       `json:"intellij_datasources,omitempty" yaml:"intellij_datasources,omitempty"`       // Allows IntelliJ datasource usernames and passwords to be changed. Most useful for; DataGrip and databases within IntelliJ Ultimate.
+	IntellijRunConfigurations []IntellijRunConfiguration `json:"intellij_run_configurations,omitempty" yaml:"intellij_run_configurations,omitempty"`// Allows changes to database access credentials within IntelliJ run configurations.
+	JSONDatasources           []JSONDatasource           `json:"json_datasources,omitempty" yaml:"json_datasources,omitempty"`           // Allows a JSON file to be generated containing usernames and passwords.
+	PosticoDatasources        []PosticoDatasource        `json:"postico_datasources,omitempty" yaml:"postico_datasources,omitempty"`        // Allows changes to database access credentials stored in a Postico SQLite database.
+	Querious2Datasources      []Querious2Datasource      `json:"querious2_datasources,omitempty" yaml:"querious2_datasources,omitempty"`      // Allows changes to database access credentials stored in a Querious 2 SQLite database.
+	SequelAceDatasources      []SequelAceDatasource      `json:"sequel_ace_datasources,omitempty" yaml:"sequel_ace_datasources,omitempty"`     // Allows changes to database access credentials for Sequel Ace plists.
+	SequelProDatasources      []SequelProDatasource      `json:"sequel_pro_datasources,omitempty" yaml:"sequel_pro_datasources,omitempty"`     // Allows changes to database access credentials for Sequel Pro plists.
+	ShellDatasources          []ShellDatasource          `json:"shell_datasources,omitempty" yaml:"shell_datasources,omitempty"`          // Allows a file to be generated in a shell script that contains exports of environment; variables containing the new credentials.
+	TemplateDatasources       []TemplateDatasource       `json:"template_datasources,omitempty" yaml:"template_datasources,omitempty"`       // Fills credentials into a provided Go template string or template file and prints the; result to stdout. The Credentials object is set as the dot context and its fields; (.Username and .Password) are available. Unlike the other datasources, templates are; generated anew each time and do not attempt to find previously existing keys to modify.; Go templates are documented here: https://golang.org/pkg/text/template/
 }
 
 type IntellijDatasource struct {
@@ -79,6 +80,11 @@ type PosticoDatasource struct {
 type Querious2Datasource struct {
 	DatabaseUUID        string `json:"database_uuid" yaml:"database_uuid"`        // The unique identifier for the Querious database to update. Can be found by looking in the; SQLite database.
 	Querious2SqlitePath string `json:"querious2_sqlite_path" yaml:"querious2_sqlite_path"`// Path to the SQLite database in which Querious 2 stores its data. The file is typically; called Connections.sqlite.
+}
+
+type SequelAceDatasource struct {
+	DatabaseUUID       string `json:"database_uuid" yaml:"database_uuid"`        // The unique identifier for the Sequel Ace database to update. Can be found by looking in; the plist.
+	SequelAcePlistPath string `json:"sequel_ace_plist_path" yaml:"sequel_ace_plist_path"`// Path to the plist in which Sequel Ace stores its data. The file is typically called; Favorites.plist
 }
 
 type SequelProDatasource struct {
