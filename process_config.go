@@ -11,24 +11,24 @@ type ConfigurationProcessor interface {
 }
 
 type VaultConfigurationProcessor struct {
-	credentials           *Credentials
-	vaultGithubAuthClient *VaultGithubAuthClient
-	vaultAddress          string
-	vaultConfiguration    []VaultConfiguration
-	writer                io.Writer
+	credentials        *Credentials
+	vaultClient        VaultClient
+	vaultAddress       string
+	vaultConfiguration []VaultConfiguration
+	writer             io.Writer
 }
 
 func (v VaultConfigurationProcessor) ProcessConfig() {
 	log.Printf("\n\n\n\n =========================== [VAULT ADDRESS %s] =========================== \n\n", v.vaultAddress)
 
-	err := v.vaultGithubAuthClient.LoginWithGithub()
+	err := v.vaultClient.Login()
 	if err != nil {
-		log.Fatalf("[GITHUB AUTH] Could not log in with Github: %s", err)
+		log.Fatalf("[VAULT AUTH] Could not log in to Vault: %s", err)
 		return
 	}
 
 	for _, configItem := range v.vaultConfiguration {
-		secret, err := v.vaultGithubAuthClient.GetCredential(configItem.VaultPath, configItem.VaultRole)
+		secret, err := v.vaultClient.GetCredential(configItem.VaultPath, configItem.VaultRole)
 		if err != nil {
 			log.Printf("[VAULT AUTH] Could not retrieve secret for vault path %s and vault role %s because %s. Skipping.", configItem.VaultPath, configItem.VaultRole, err)
 			continue
@@ -65,25 +65,28 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, write
 	}
 
 	if ac.VaultAddress != nil && ac.VaultConfiguration != nil {
+		var vc VaultClient = nil
 		if githubToken == "" {
-			return nil, fmt.Errorf("[GITHUB AUTH] Please provide a valid GitHub token as the environment variable GITHUB_TOKEN so we can fetch new credentials.")
+			vc = &DefaultVaultAuthClient{}
+		} else {
+			vc = &VaultGithubAuthClient{
+				GithubToken:  githubToken,
+				VaultAddress: *ac.VaultAddress,
+			}
 		}
 
 		return VaultConfigurationProcessor{
-			vaultGithubAuthClient: &VaultGithubAuthClient{
-				GithubToken:  githubToken,
-				VaultAddress: *ac.VaultAddress,
-			},
+			vaultClient:        vc,
 			vaultAddress:       *ac.VaultAddress,
 			vaultConfiguration: ac.VaultConfiguration,
-			writer: writer,
+			writer:             writer,
 		}, nil
 	}
 
 	if ac.Constant != nil {
 		return ConstantConfigurationProcessor{
 			constant: *ac.Constant,
-			writer: writer,
+			writer:   writer,
 		}, nil
 	}
 
@@ -143,6 +146,15 @@ func ProcessVaultConfigItem(configurables *Configurables, credentials *Credentia
 
 	for _, sequelProConfig := range configurables.SequelProDatasources {
 		flow, err := NewSequelProFlow(&sequelProConfig)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		flows = append(flows, flow)
+	}
+
+	for _, sequelAceConfig := range configurables.SequelAceDatasources {
+		flow, err := NewSequelAceFlow(&sequelAceConfig)
 		if err != nil {
 			errs = append(errs, err)
 			continue
@@ -216,4 +228,3 @@ func UpdateCredentials(flows []Flower, credentials *Credentials) {
 		}
 	}
 }
-
