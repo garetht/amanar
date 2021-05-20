@@ -25,6 +25,7 @@ type Amanar struct {
 type AmanarConfiguration struct {
 	Constant           *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`           // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
 	VaultAddress       *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
+	VaultAuth          *VaultAuth           `json:"vault_auth,omitempty" yaml:"vault_auth,omitempty"`         // Vault auth method.
 	VaultConfiguration []VaultConfiguration `json:"vault_configuration,omitempty" yaml:"vault_configuration,omitempty"`
 }
 
@@ -102,3 +103,11 @@ type TemplateDatasource struct {
 	Template     *string `json:"template,omitempty" yaml:"template,omitempty"`     // A Go template string that will be filled in with credentials.
 	TemplatePath *string `json:"template_path,omitempty" yaml:"template_path,omitempty"`// The path to the Go template file that will be filled in with credentials.
 }
+
+// Vault auth method.
+type VaultAuth string
+const (
+	AwsIam VaultAuth = "aws_iam"
+	Github VaultAuth = "github"
+	Token VaultAuth = "token"
+)

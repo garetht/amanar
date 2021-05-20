@@ -61,6 +61,11 @@
             "format": "uri",
             "minLength": 1
           },
+          "vault_auth": {
+            "enum": ["token", "github", "aws_iam"],
+            "description": "Vault auth method.",
+            "type": "string"
+          },
           "vault_configuration": {
             "type": "array",
             "items": {

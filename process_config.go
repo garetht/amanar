@@ -66,14 +66,36 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, write
 
 	if ac.VaultAddress != nil && ac.VaultConfiguration != nil {
 		var vc VaultClient = nil
-		if githubToken == "" {
-			vc = &DefaultVaultAuthClient{
-				VaultAddress: *ac.VaultAddress,
+
+		// for backward compatibility, vault_auth is optional in the config file
+		if ac.VaultAuth == nil {
+			if githubToken == "" {
+				vc = &DefaultVaultAuthClient{
+					VaultAddress: *ac.VaultAddress,
+				}
+			} else {
+				vc = &VaultGithubAuthClient{
+					GithubToken:  githubToken,
+					VaultAddress: *ac.VaultAddress,
+				}
 			}
 		} else {
-			vc = &VaultGithubAuthClient{
-				GithubToken:  githubToken,
-				VaultAddress: *ac.VaultAddress,
+			switch *ac.VaultAuth {
+			case "token":
+				vc = &DefaultVaultAuthClient{
+					VaultAddress: *ac.VaultAddress,
+				}
+			case "github":
+				vc = &VaultGithubAuthClient{
+					GithubToken:  githubToken,
+					VaultAddress: *ac.VaultAddress,
+				}
+			case "aws_iam":
+				vc = &VaultAwsIamAuthClient{
+					VaultAddress: *ac.VaultAddress,
+				}
+			default:
+				return nil, fmt.Errorf("unsupported Vault auth method %s", *ac.VaultAuth)
 			}
 		}
 
