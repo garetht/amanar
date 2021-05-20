@@ -67,7 +67,9 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, write
 	if ac.VaultAddress != nil && ac.VaultConfiguration != nil {
 		var vc VaultClient = nil
 		if githubToken == "" {
-			vc = &DefaultVaultAuthClient{}
+			vc = &DefaultVaultAuthClient{
+				VaultAddress: *ac.VaultAddress,
+			}
 		} else {
 			vc = &VaultGithubAuthClient{
 				GithubToken:  githubToken,

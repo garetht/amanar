@@ -28,11 +28,16 @@ type VaultGithubAuthClient struct {
 }
 
 type DefaultVaultAuthClient struct {
-	vaultClient *api.Client
+	VaultAddress string
+	vaultClient  *api.Client
 }
 
 func (dc *DefaultVaultAuthClient) Login() error {
 	c, err := api.NewClient(api.DefaultConfig())
+	if err != nil {
+		return err
+	}
+	err = c.SetAddress(dc.VaultAddress)
 	if err != nil {
 		return err
 	}
