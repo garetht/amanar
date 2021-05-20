@@ -23,14 +23,20 @@ A tool to programmatically insert refreshed HashiCorp Vault credentials into des
 
 ## Usage
 
-The usage of this program depends on two environment variables:
+The `CONFIG_FILEPATH` environment variable specifies the location of your configuration file. Make sure it's set properly.
 
-- *GITHUB_TOKEN*, specifying the personal Github token which will allow refreshed Vault credentials to be retrieved
-- *CONFIG_FILEPATH*, specifying the location of your configuration file
+Before executing the `amanar` binary, depend on the Vault auth method you choose, you may also need to set the following:
+
+- if `github` auth is chosen, `GITHUB_TOKEN` environment variable specifies the personal Github token which will allow refreshed Vault credentials to be retrieved
+- if `aws_iam` auth is chosen, `AWS_PROFILE` and/or any other [aws cli environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html). Together with your `~/.aws` folder, they are your aws cli authentication setup.
+- if `token` auth is chosen, run `vault login` to login to Vault and get a token into `~/.vault-token` file. You have [many options](https://www.vaultproject.io/docs/auth) (include the above Github and AWS IAM). e.g.
+  - `vault login -method=github -path=github-prod`
+  - `vault login -method=aws role="prod-admin"`
+  - `vault login <your_vault_token>`
 
 The program makes certain assumptions about the state of your keychain and configuration files. It cannot be used to create new keychain or configuration entries, only update them. In addition, there should be only one keychain entry per unique identifier (usually the database UUID) so that the correct keychain item to update can be selected without reference to a particular user account.
 
-Multiple vault addresses may now be specified in your configuration file.
+Multiple vault addresses may now be specified in your configuration file, as long as your auth config works for all of them.
 
 ## Configuration
 
@@ -55,7 +61,9 @@ Dependencies are managed by Go modules. Run `make build` to build this project. 
 
 This is a Mac OS-specific project. It may be possible to make this work with a Linux keychain, but no such attempt has been or will be made.
 
-The project has been successfully built on Go `1.13.6` on Mac OS 10.13.6. The mininum possible Go version required is `1.13`.
+The project has been successfully built on Go `1.16.3` on Mac OS 11.2.3. The minimum possible Go version required is `1.13`.
+
+`npm` is required to build this project. Refer to `node` installation guides like [nvm](https://github.com/nvm-sh/nvm)
 
 
 ## Developing: Extending
