@@ -91,8 +91,13 @@ func NewConfigurationProcessor(githubToken string, ac AmanarConfiguration, write
 					VaultAddress: *ac.VaultAddress,
 				}
 			case "aws_iam":
+				vaultDBUsernamePrefix := ""
+				if ac.VaultDBUsernamePrefix != nil {
+					vaultDBUsernamePrefix = *ac.VaultDBUsernamePrefix
+				}
 				vc = &VaultAwsIamAuthClient{
-					VaultAddress: *ac.VaultAddress,
+					VaultAddress:          *ac.VaultAddress,
+					VaultDBUsernamePrefix: vaultDBUsernamePrefix,
 				}
 			default:
 				return nil, fmt.Errorf("unsupported Vault auth method %s", *ac.VaultAuth)

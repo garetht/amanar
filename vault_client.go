@@ -38,8 +38,9 @@ type DefaultVaultAuthClient struct {
 }
 
 type VaultAwsIamAuthClient struct {
-	VaultAddress string
-	vaultClient  *api.Client
+	VaultAddress          string
+	VaultDBUsernamePrefix string
+	vaultClient           *api.Client
 }
 
 func (dc *DefaultVaultAuthClient) Login() error {
@@ -115,8 +116,6 @@ func (vc *VaultAwsIamAuthClient) Login() error {
 		return err
 	}
 
-	loginData := make(map[string]interface{})
-
 	stsSession := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
@@ -124,7 +123,6 @@ func (vc *VaultAwsIamAuthClient) Login() error {
 	var params *sts.GetCallerIdentityInput
 	svc := sts.New(stsSession)
 	stsRequest, _ := svc.GetCallerIdentityRequest(params)
-
 	stsRequest.Sign()
 
 	headersJson, err := json.Marshal(stsRequest.HTTPRequest.Header)
@@ -136,6 +134,7 @@ func (vc *VaultAwsIamAuthClient) Login() error {
 		return err
 	}
 
+	loginData := make(map[string]interface{})
 	loginData["iam_http_request_method"] = stsRequest.HTTPRequest.Method
 	loginData["iam_request_url"] = base64.StdEncoding.EncodeToString([]byte(stsRequest.HTTPRequest.URL.String()))
 	loginData["iam_request_headers"] = base64.StdEncoding.EncodeToString(headersJson)
@@ -145,8 +144,19 @@ func (vc *VaultAwsIamAuthClient) Login() error {
 	if err != nil {
 		return err
 	}
-
 	c.SetToken(secret.Auth.ClientToken)
+
+	// create a child token with display_name set as what's configured as intended db username prefix
+	if vc.VaultDBUsernamePrefix != "" {
+		tokenCreateData := make(map[string]interface{})
+		tokenCreateData["display_name"] = vc.VaultDBUsernamePrefix
+		newSecret, err := c.Logical().Write("auth/token/create", tokenCreateData)
+		if err != nil {
+			return err
+		}
+		c.SetToken(newSecret.Auth.ClientToken)
+	}
+
 	vc.vaultClient = c
 
 	return nil

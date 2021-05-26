@@ -66,6 +66,11 @@
             "description": "Vault auth method.",
             "type": "string"
           },
+          "vault_db_username_prefix": {
+            "description": "This will be used as the DisplayName of the Vault token, then further be used in the generation of the temporary DB username depend on how you defined the username_template. Currently, this is only supported by AWS IAM auth method.",
+            "type": "string",
+            "minLength": 1
+          },
           "vault_configuration": {
             "type": "array",
             "items": {

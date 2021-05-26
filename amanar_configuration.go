@@ -23,10 +23,11 @@ type Amanar struct {
 }
 
 type AmanarConfiguration struct {
-	Constant           *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`           // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
-	VaultAddress       *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`      // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
-	VaultAuth          *VaultAuth           `json:"vault_auth,omitempty" yaml:"vault_auth,omitempty"`         // Vault auth method.
-	VaultConfiguration []VaultConfiguration `json:"vault_configuration,omitempty" yaml:"vault_configuration,omitempty"`
+	Constant              *Constant            `json:"constant,omitempty" yaml:"constant,omitempty"`                // Amanar is able to render constants, which are pieces of information that do not depend on; Vault. This allows Amanar to be used to configure local static credentials in addition to; Vault-derived ones.
+	VaultAddress          *string              `json:"vault_address,omitempty" yaml:"vault_address,omitempty"`           // The address to a particular vault. Vault addresses usually differ for different; environments. For example, we may have one vault address for production and another for; staging.
+	VaultAuth             *VaultAuth           `json:"vault_auth,omitempty" yaml:"vault_auth,omitempty"`              // Vault auth method.
+	VaultConfiguration    []VaultConfiguration `json:"vault_configuration,omitempty" yaml:"vault_configuration,omitempty"`     
+	VaultDBUsernamePrefix *string              `json:"vault_db_username_prefix,omitempty" yaml:"vault_db_username_prefix,omitempty"`// This will be used as the DisplayName of the Vault token, then further be used in the; generation of the temporary DB username depend on how you defined the username_template.; Currently, this is only supported by AWS IAM auth method.
 }
 
 // Amanar is able to render constants, which are pieces of information that do not depend on
